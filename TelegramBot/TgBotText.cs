@@ -13,6 +13,7 @@ namespace WhisleBotConsole.TelegramBot
 
         public const string ReplyInputIdOrLink = "Введите id или ссылку на группу, в которой нужно следить за ключевыми словами:";
         public const string EditCurrentSubscriptionsLink = "Укажите у каких групп хотите редактировать подписки: ";
+        public const string RemoveSubscriptionsLink = "Укажите у каких групп хотите удалить подписки: ";
 
 
         public static string NotifyMeWhenThisWordInGroupAppears(string groupName, string word)

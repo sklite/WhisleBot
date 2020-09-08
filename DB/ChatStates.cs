@@ -9,6 +9,10 @@ namespace WhisleBotConsole.DB
         Standrard,
         NewGroupToAdd,
         NewWordToGroupAdd,
-        EditExistingGroup
+        EditExistingGroup,
+        /// <summary>
+        /// Select group for removing subscriptions
+        /// </summary>
+        RemoveSettingsStep1
     }
 }

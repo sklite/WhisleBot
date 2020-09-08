@@ -23,6 +23,13 @@ namespace WhisleBotConsole.TelegramBot.MessageHandlers
 
         public abstract OutputUserMessage GetResponseTo(Message inputMessage, User user);
 
+        protected OutputUserMessage FailWithText(Message inputMessage, User user, string text)
+        {
+            user.State = ChatState.Standrard;
+            _db.SaveChanges();
+            return GetDefaultResponse(inputMessage.Chat.Id, text);
+        }
+
         public static OutputUserMessage GetDefaultResponse(long chatId, string additionalText = "")
         {
             return new OutputUserMessage()

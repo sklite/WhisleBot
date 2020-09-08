@@ -22,16 +22,18 @@ namespace WhisleBotConsole.TelegramBot
             _db = db;
             _messageHandlers = new Dictionary<ChatState, BaseTgMessageHandler>
             {
-                { ChatState.Standrard, new AddNewAlarms(_db) },
+               // { ChatState.Standrard, new AddNewAlarms(_db) },
                 { ChatState.NewGroupToAdd, new InputGroup(_db, vk) },
                 { ChatState.NewWordToGroupAdd, new InputKeyword(_db) },
-                { ChatState.EditExistingGroup, new UpdateKeywords(_db) }
+                { ChatState.EditExistingGroup, new UpdateKeywords(_db) },
+                { ChatState.RemoveSettingsStep1, new RemoveSettingsStep2(_db) }
             };
 
             _commandHandlers = new Dictionary<string, BaseTgMessageHandler>
             {
                 { TgBotText.AddNewSettings, new AddNewAlarms(_db) },
-                { TgBotText.EditExistingSettings, new EditExistingSettings(_db, vk) }
+                { TgBotText.EditExistingSettings, new EditExistingSettings(_db, vk) },
+                { TgBotText.RemoveSubscriptions, new RemoveSettingsStep1(_db, vk) }
             };
         }
 
@@ -55,14 +57,14 @@ namespace WhisleBotConsole.TelegramBot
 
             var user = GetOrCreateUser(inputMessage.Chat.Id);
 
-            if (user.State == ChatState.NewGroupToAdd)
-                return _messageHandlers[ChatState.NewGroupToAdd].GetResponseTo(inputMessage, user);
+            if (_messageHandlers.ContainsKey(user.State))
+                return _messageHandlers[user.State].GetResponseTo(inputMessage, user);
 
-            if (user.State == ChatState.NewWordToGroupAdd)
-                return _messageHandlers[ChatState.NewWordToGroupAdd].GetResponseTo(inputMessage, user);
+            //if (user.State == ChatState.NewWordToGroupAdd)
+            //    return _messageHandlers[ChatState.NewWordToGroupAdd].GetResponseTo(inputMessage, user);
 
-            if (user.State == ChatState.EditExistingGroup)
-                return _messageHandlers[ChatState.EditExistingGroup].GetResponseTo(inputMessage, user);
+            //if (user.State == ChatState.EditExistingGroup)
+            //    return _messageHandlers[ChatState.EditExistingGroup].GetResponseTo(inputMessage, user);
 
             if (_commandHandlers.ContainsKey(inputMessage.Text))
                 return _commandHandlers[inputMessage.Text].GetResponseTo(inputMessage, user);

@@ -52,8 +52,6 @@ namespace WhisleBotConsole.TelegramBot.MessageHandlers
                 userPrefs.Keyword = inputMessage.Text;
             }
 
-            
-
             user.CurrentGroupId = null;
             user.CurrentGroupName = null;
             user.State = ChatState.Standrard;
