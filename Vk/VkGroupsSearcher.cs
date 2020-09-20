@@ -1,20 +1,14 @@
 ﻿using NLog;
 using System;
-using System.Collections.Generic;
-using System.Data.SqlTypes;
 using System.Linq;
-using System.Linq.Expressions;
-using System.Security;
-using System.Text;
-using System.Threading.Tasks;
 using VkNet;
 using VkNet.Enums.Filters;
 using VkNet.Model;
 using VkNet.Model.RequestParams;
 
-namespace BotServer.Vk
+namespace WhisleBotConsole.Vk
 {
-    public class VkGroupsSearcher
+    public class VkGroupsSearcher : IVkGroupsSearcher
     {
         readonly VkApi _api;
         readonly Logger _logger;
@@ -27,7 +21,7 @@ namespace BotServer.Vk
 
             _api.Authorize(new ApiAuthParams
             {
-                ApplicationId = 123456,
+                ApplicationId = 7558617,
                 Login = "89167224820",
                 Password = "sYZBhzW2",
                 Settings = Settings.All

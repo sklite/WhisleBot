@@ -1,5 +1,4 @@
 ﻿using BotServer.TelegramBot;
-using BotServer.Vk;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -8,6 +7,7 @@ using System;
 using WhisleBotConsole.Config;
 using WhisleBotConsole.DB;
 using WhisleBotConsole.TelegramBot;
+using WhisleBotConsole.Vk;
 
 namespace WhisleBotConsole
 {
@@ -53,6 +53,7 @@ namespace WhisleBotConsole
             //    RegionEndpoint.GetBySystemName(awsSettings.AwsRegion)));
 
             services.AddSingleton<IBotController, BotController>();
+            services.AddSingleton<IVkGroupsSearcher, VkGroupsSearcher>();
             services.AddSingleton<VkGroupsSearcher>();
             services.AddSingleton<ITelegramService, TelegramBotService>();
             services.AddSingleton<ITelegramMessageRouter, TelegramMessageRouter>();

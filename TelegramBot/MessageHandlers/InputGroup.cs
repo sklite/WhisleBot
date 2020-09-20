@@ -1,30 +1,21 @@
-﻿using BotServer.Vk;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.ReplyMarkups;
 using WhisleBotConsole.DB;
 using WhisleBotConsole.Models;
+using WhisleBotConsole.Vk;
 using User = WhisleBotConsole.DB.User;
 
 namespace WhisleBotConsole.TelegramBot.MessageHandlers
 {
     class InputGroup : BaseTgMessageHandler
     {
-        private readonly VkGroupsSearcher _vk;
+        private readonly IVkGroupsSearcher _vk;
 
-        public InputGroup(UsersContext db, VkGroupsSearcher vk)
+        public InputGroup(UsersContext db, IVkGroupsSearcher vk)
             : base(db)
         {
             _vk = vk;
-        }
-
-        OutputUserMessage FailWithText(Message inputMessage, User user, string text)
-        {
-            user.State = ChatState.Standrard;
-            _db.SaveChanges();
-            return GetDefaultResponse(inputMessage.Chat.Id, text);
         }
 
         public override OutputUserMessage GetResponseTo(Message inputMessage, User user)
@@ -36,8 +27,7 @@ namespace WhisleBotConsole.TelegramBot.MessageHandlers
 
             if (!Uri.TryCreate(inputText, UriKind.Absolute, out Uri uriResult))            
                 return FailWithText(inputMessage, user, "Введён некорректный URL");
-            
-            
+
             
             var getGroupIdResult = _vk.GetGroupIdByLink(uriResult);
             if (!getGroupIdResult.Success)

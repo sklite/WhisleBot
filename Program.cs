@@ -7,16 +7,18 @@ namespace WhisleBotConsole
 {
     class Program
     {
+        static IBotController _botController;
         static void Main(string[] args)
         {
             var logger = LogManager.GetCurrentClassLogger();
+            AppDomain.CurrentDomain.ProcessExit += CurrentDomain_ProcessExit;
             try
             {
                 var arguments = GetArguments(args);
                 var startup = new Startup(arguments);
 
-                var service = startup.ServiceProvider.GetService<IBotController>();
-                service.Start();
+                _botController = startup.ServiceProvider.GetService<IBotController>();
+                _botController.Start();
 
                 Console.WriteLine("Press ANY key to exit");
                 Console.ReadKey();
@@ -30,6 +32,11 @@ namespace WhisleBotConsole
             {
                 LogManager.Shutdown();
             }
+        }
+
+        private static void CurrentDomain_ProcessExit(object sender, EventArgs e)
+        {
+            _botController?.Stop();
         }
 
         private static Arguments GetArguments(string[] args)

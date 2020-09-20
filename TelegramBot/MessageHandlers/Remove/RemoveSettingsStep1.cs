@@ -1,23 +1,20 @@
-﻿using BotServer.Vk;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.ReplyMarkups;
-using VkNet.Enums.SafetyEnums;
 using WhisleBotConsole.DB;
 using WhisleBotConsole.Models;
 using WhisleBotConsole.TelegramBot.MarkupUtils;
+using WhisleBotConsole.Vk;
 using User = WhisleBotConsole.DB.User;
 
 namespace WhisleBotConsole.TelegramBot.MessageHandlers
 {
     class RemoveSettingsStep1 : BaseTgMessageHandler
     {
-        private readonly VkGroupsSearcher _vk;
+        private readonly IVkGroupsSearcher _vk;
 
-        public RemoveSettingsStep1(UsersContext db, VkGroupsSearcher vk)
+        public RemoveSettingsStep1(UsersContext db, IVkGroupsSearcher vk)
             : base(db)
         {
             _vk = vk;
@@ -27,6 +24,7 @@ namespace WhisleBotConsole.TelegramBot.MessageHandlers
         {
             var currentSubscriptions = _db.Preferences.Where(pref => pref.User.Id == user.Id);
             var keyboard = MessageMarkupUtilities.GetReplyKeyboardForGroups(currentSubscriptions);
+            keyboard.Add(new List<KeyboardButton> { new KeyboardButton(TgBotText.Cancel) });
 
             user.State = ChatState.RemoveSettingsStep1;
             _db.SaveChanges();
