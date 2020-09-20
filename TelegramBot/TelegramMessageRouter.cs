@@ -1,12 +1,10 @@
-﻿using BotServer.Vk;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Telegram.Bot.Types;
 using WhisleBotConsole.DB;
 using WhisleBotConsole.Models;
 using WhisleBotConsole.TelegramBot.MessageHandlers;
+using WhisleBotConsole.Vk;
 using User = WhisleBotConsole.DB.User;
 
 namespace WhisleBotConsole.TelegramBot
@@ -17,7 +15,7 @@ namespace WhisleBotConsole.TelegramBot
         Dictionary<string, BaseTgMessageHandler> _commandHandlers;
         private readonly UsersContext _db;
 
-        public TelegramMessageRouter(UsersContext db, VkGroupsSearcher vk)
+        public TelegramMessageRouter(UsersContext db, IVkGroupsSearcher vk)
         {
             _db = db;
             _messageHandlers = new Dictionary<ChatState, BaseTgMessageHandler>
@@ -62,7 +60,6 @@ namespace WhisleBotConsole.TelegramBot
 
             //if (user.State == ChatState.NewWordToGroupAdd)
             //    return _messageHandlers[ChatState.NewWordToGroupAdd].GetResponseTo(inputMessage, user);
-
             //if (user.State == ChatState.EditExistingGroup)
             //    return _messageHandlers[ChatState.EditExistingGroup].GetResponseTo(inputMessage, user);
 

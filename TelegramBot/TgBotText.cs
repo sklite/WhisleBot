@@ -10,8 +10,9 @@ namespace WhisleBotConsole.TelegramBot
         public const string AddNewSettings = "Добавить новые подписки";
         public const string EditExistingSettings = "Редактировать подписки";
         public const string RemoveSubscriptions = "Удалить подписки";
+        public const string Cancel = "Отмена";
 
-        public const string ReplyInputIdOrLink = "Введите id или ссылку на группу, в которой нужно следить за ключевыми словами:";
+        public const string ReplyInputIdOrLink = "Введите ссылку на группу, в которой нужно следить за ключевыми словами:";
         public const string EditCurrentSubscriptionsLink = "Укажите у каких групп хотите редактировать подписки: ";
         public const string RemoveSubscriptionsLink = "Укажите у каких групп хотите удалить подписки: ";
 

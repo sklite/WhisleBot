@@ -1,11 +1,6 @@
-﻿using BotServer.Vk;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Linq;
-using System.Text;
 using Telegram.Bot.Types;
-using Telegram.Bot.Types.ReplyMarkups;
-using VkNet.Enums.SafetyEnums;
 using WhisleBotConsole.DB;
 using WhisleBotConsole.Models;
 using WhisleBotConsole.TelegramBot.MarkupUtils;
@@ -23,6 +18,8 @@ namespace WhisleBotConsole.TelegramBot.MessageHandlers
 
         public override OutputUserMessage GetResponseTo(Message inputMessage, User user)
         {
+            if (inputMessage.Text == TgBotText.Cancel)
+                return FailWithText(inputMessage, user, "Ну передумал и передумал.");
             if (!inputMessage.Text.Contains("(id: "))
                 return FailWithText(inputMessage, user, "Не удалось получить id группы");
 
