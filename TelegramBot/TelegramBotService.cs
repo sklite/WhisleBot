@@ -53,19 +53,6 @@ namespace BotServer.TelegramBot
         {
             if (e.Message.Text != null)
             {
-                var client = new HttpClient();
-
-                var userMessage = new InputUserMessage
-                {
-                    ChatId = e.Message.Chat.Id,
-                    Text = e.Message.Text
-                };
-
-                //var reuslt = client.PostAsync("https://localhost:44304/api/botapp/send",
-                //    new StringContent(JsonConvert.SerializeObject(userMessage), Encoding.UTF8, "application/json")).Result;
-
-
-
                 var outMessage = _messageRouter.ProcessMessage(e.Message);
 
                 await botClient.SendTextMessageAsync(

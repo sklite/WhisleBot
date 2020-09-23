@@ -8,6 +8,7 @@ using WhisleBotConsole.Config;
 using WhisleBotConsole.DB;
 using WhisleBotConsole.TelegramBot;
 using WhisleBotConsole.Vk;
+using WhisleBotConsole.Vk.Posts;
 
 namespace WhisleBotConsole
 {
@@ -40,23 +41,19 @@ namespace WhisleBotConsole
             var tgSettings = config.GetSection("TelegramSettings").Get<TelegramSettings>();
             var vkSettings = config.GetSection("VkSettings").Get<VkSettings>();
 
-            //var couchbaseSettings = config.GetSection("environment").GetSection("Couchbase").Get<CouchbaseSettings>();
-            //var awsSettings = config.GetSection("environment").GetSection("AWS").Get<AWSSettings>();
-
             services.Configure<Settings>(settings =>
             {
                 settings.Telegram = tgSettings;
                 settings.Vkontakte = vkSettings;
             });
 
-            //services.AddSingleton<ITransferUtility>(_ => new TransferUtility(awsSettings.AwsAccessKeyId, awsSettings.AwsSecretAccessKey,
-            //    RegionEndpoint.GetBySystemName(awsSettings.AwsRegion)));
-
             services.AddSingleton<IBotController, BotController>();
             services.AddSingleton<IVkGroupsSearcher, VkGroupsSearcher>();
             services.AddSingleton<VkGroupsSearcher>();
             services.AddSingleton<ITelegramService, TelegramBotService>();
             services.AddSingleton<ITelegramMessageRouter, TelegramMessageRouter>();
+            services.AddSingleton<IPostKeywordSearcher, StupidKeywordSearcher>();
+
             services.AddDbContext<UsersContext>();
             services.AddLogging(loggingBuilder =>
             {
