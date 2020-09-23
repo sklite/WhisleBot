@@ -6,8 +6,8 @@ namespace WhisleBotConsole.Config
 {
     class VkSettings
     {
-        public string Logn { get; set; }
+        public string Login { get; set; }
         public string Password { get; set; }
-        public int AppId { get; set; }
+        public ulong AppId { get; set; }
     }
 }

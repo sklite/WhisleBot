@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using NLog;
+using System.Collections.Generic;
 using System.Linq;
 using Telegram.Bot.Types;
 using WhisleBotConsole.DB;
@@ -14,10 +15,12 @@ namespace WhisleBotConsole.TelegramBot
         Dictionary<ChatState, BaseTgMessageHandler> _messageHandlers;
         Dictionary<string, BaseTgMessageHandler> _commandHandlers;
         private readonly UsersContext _db;
+        private readonly Logger _logger;
 
         public TelegramMessageRouter(UsersContext db, IVkGroupsSearcher vk)
         {
             _db = db;
+            _logger = LogManager.GetCurrentClassLogger();
             _messageHandlers = new Dictionary<ChatState, BaseTgMessageHandler>
             {
                // { ChatState.Standrard, new AddNewAlarms(_db) },
@@ -53,19 +56,14 @@ namespace WhisleBotConsole.TelegramBot
             if (inputMessage == null || string.IsNullOrEmpty(inputMessage.Text))
                 return BaseTgMessageHandler.GetDefaultResponse(inputMessage.Chat.Id);
 
+            _logger.Info($"Incoming message from {inputMessage.Chat.Id}. Message content: \"{inputMessage.Text}\"");
             var user = GetOrCreateUser(inputMessage.Chat.Id);
 
             if (_messageHandlers.ContainsKey(user.State))
                 return _messageHandlers[user.State].GetResponseTo(inputMessage, user);
 
-            //if (user.State == ChatState.NewWordToGroupAdd)
-            //    return _messageHandlers[ChatState.NewWordToGroupAdd].GetResponseTo(inputMessage, user);
-            //if (user.State == ChatState.EditExistingGroup)
-            //    return _messageHandlers[ChatState.EditExistingGroup].GetResponseTo(inputMessage, user);
-
             if (_commandHandlers.ContainsKey(inputMessage.Text))
                 return _commandHandlers[inputMessage.Text].GetResponseTo(inputMessage, user);
-
             
             return BaseTgMessageHandler.GetDefaultResponse(inputMessage.Chat.Id);
         }

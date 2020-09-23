@@ -4,7 +4,9 @@ using NLog;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Text.RegularExpressions;
 using WhisleBotConsole.Config;
+using WhisleBotConsole.Vk;
 
 namespace WhisleBotConsole
 {
@@ -12,12 +14,14 @@ namespace WhisleBotConsole
     {
         private readonly IOptions<Settings> _settings;
         private readonly ITelegramService _botService;
+        private readonly IVkGroupsSearcher _vkGroupSearcher;
         private readonly Logger _logger;
 
-        public BotController(IOptions<Settings> settings, ITelegramService botService)
+        public BotController(IOptions<Settings> settings, ITelegramService botService, IVkGroupsSearcher groupSearcher)
         {
             _settings = settings;
             _botService = botService;
+            _vkGroupSearcher = groupSearcher;
             _logger = LogManager.GetCurrentClassLogger();
         }
 
@@ -25,12 +29,16 @@ namespace WhisleBotConsole
         {
             _botService.Start();
             _logger.Info($"Bot started");
+
+            _vkGroupSearcher.StartSearch(3000);
         }
 
         public void Stop()
         {
             _botService.Stop();
             _logger.Info($"Bot stopped");
+
+            _vkGroupSearcher.StopSearch();
         }
     }
 }
