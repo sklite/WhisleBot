@@ -45,7 +45,6 @@ namespace WhisleBotConsole.Vk
                 Password = _settings.Vkontakte.Password,
                 Settings = VkNet.Enums.Filters.Settings.All
             }) ;
-            Console.WriteLine(_api.Token);
             _usersContext = usersContect;
             _keywordSearcher = keywordSearcher;
             _userNotifier = userNotifier;
@@ -69,12 +68,12 @@ namespace WhisleBotConsole.Vk
         }
 
         private void OnTimedEvent(object sender, ElapsedEventArgs e)
-        {
-            _logger.Info("Searching mentions...");
+        {            
             //Avoid multiple vk calls at the same time
             if (IsSearching)
                 return;
 
+            _logger.Info("Searching mentions...");
             IsSearching = true;
             var allPrefs = _usersContext.Preferences.Include(u => u.User);
             foreach (var prefs in allPrefs)
@@ -97,7 +96,7 @@ namespace WhisleBotConsole.Vk
                         if (!searchResult.Contains)
                             continue;
 
-                        _userNotifier.NotifyUser(prefs.User.Id, prefs.GroupId, post.Id.Value, searchResult.Word);
+                        _userNotifier.NotifyUser(prefs.User.Id, prefs.GroupId, string.Empty, post.Id.Value, searchResult.Word);
                     }
 
                 }

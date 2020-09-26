@@ -7,6 +7,6 @@ namespace WhisleBotConsole.Vk
 {
     interface IUserNotifier
     {
-        void NotifyUser(long iserId, long groupId,long postId, string keyword);
+        void NotifyUser(long iserId, long groupId, string groupName, long postId, string keyword);
     }
 }

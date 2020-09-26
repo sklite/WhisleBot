@@ -26,7 +26,7 @@ namespace WhisleBotConsole.Vk
         }
 
 
-        public void NotifyUser(long userId, long groupId, long postId, string keyword)
+        public void NotifyUser(long userId, long groupId, string groupName, long postId, string keyword)
         {
             var user = _db.Users.Where(user => user.Id == userId).FirstOrDefault();
             if (user == null)
@@ -37,8 +37,10 @@ namespace WhisleBotConsole.Vk
             var message = new TelegramUserMessage()
             {
                 ChatId = user.ChatId,
-                Text = $"В группе {groupId} В посте {postId}  упоминается слово {keyword}."
+                Text = $"В группе id:{groupId} {groupName ?? string.Empty} В посте {postId}  упоминается слово _{keyword}_. [Ссылка](https://vk.com/wall-{groupId}_{postId}/) "
             };
+
+            _logger.Info($"Notifying user {user.Id} with textL {message.Text}");
             _messageSender.SendMessageToUser(message);
         }
     }
