@@ -16,7 +16,7 @@ namespace WhisleBotConsole.TelegramBot.MessageHandlers
         {
         }
 
-        public override OutputUserMessage GetResponseTo(Message inputMessage, User user)
+        public override TelegramUserMessage GetResponseTo(Message inputMessage, User user)
         {
             if (inputMessage.Text == TgBotText.Cancel)
                 return FailWithText(inputMessage, user, "Ну передумал и передумал.");
@@ -37,7 +37,7 @@ namespace WhisleBotConsole.TelegramBot.MessageHandlers
             _db.Preferences.RemoveRange(groupsToRemove);
             user.State = ChatState.Standrard;
             _db.SaveChanges();
-            return new OutputUserMessage()
+            return new TelegramUserMessage()
             {
                 ChatId = inputMessage.Chat.Id,
                 Text = "Подписки на ключевые слова групп успешно удалены",

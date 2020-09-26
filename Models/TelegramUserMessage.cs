@@ -5,9 +5,8 @@ using Telegram.Bot.Types.ReplyMarkups;
 
 namespace WhisleBotConsole.Models
 {
-    class OutputUserMessage : ITelegramMessage
+    class TelegramUserMessage : IMessage
     {
-        public int UserId { get; set; }
         public long ChatId { get; set; }
         public string Text { get; set; }
         public IReplyMarkup ReplyMarkup{ get; set; }

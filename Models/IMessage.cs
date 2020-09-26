@@ -4,9 +4,8 @@ using System.Text;
 
 namespace WhisleBotConsole.Models
 {
-    interface ITelegramMessage
+    interface IMessage
     {
-        int UserId { get; set; }
         long ChatId { get; set; }
         string Text { get; set; }
     }

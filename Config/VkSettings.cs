@@ -9,5 +9,6 @@ namespace WhisleBotConsole.Config
         public string Login { get; set; }
         public string Password { get; set; }
         public ulong AppId { get; set; }
+        public int BaseSearchInterval { get; set; }
     }
 }

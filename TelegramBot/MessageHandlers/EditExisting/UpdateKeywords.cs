@@ -15,7 +15,7 @@ namespace WhisleBotConsole.TelegramBot.MessageHandlers
         {
         }
 
-        public override OutputUserMessage GetResponseTo(Message inputMessage, User user)
+        public override TelegramUserMessage GetResponseTo(Message inputMessage, User user)
         {
             if (inputMessage.Text == TgBotText.Cancel)
                 return FailWithText(inputMessage, user, "Ну передумал и передумал.");
@@ -34,7 +34,7 @@ namespace WhisleBotConsole.TelegramBot.MessageHandlers
 
             var currentText = _db.Preferences.Where(pref => pref.User.Id == user.Id && pref.GroupId == groupId).FirstOrDefault();
 
-            return new OutputUserMessage()
+            return new TelegramUserMessage()
             {
                 ChatId = inputMessage.Chat.Id,
                 Text = $"Текущие ключевые слова группы: _{currentText.Keyword}_. Укажите новые ключевые слова у группы:",
