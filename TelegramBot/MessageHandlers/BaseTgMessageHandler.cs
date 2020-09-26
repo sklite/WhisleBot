@@ -21,18 +21,18 @@ namespace WhisleBotConsole.TelegramBot.MessageHandlers
             _db = db;
         }
 
-        public abstract OutputUserMessage GetResponseTo(Message inputMessage, User user);
+        public abstract TelegramUserMessage GetResponseTo(Message inputMessage, User user);
 
-        protected OutputUserMessage FailWithText(Message inputMessage, User user, string text)
+        protected TelegramUserMessage FailWithText(Message inputMessage, User user, string text)
         {
             user.State = ChatState.Standrard;
             _db.SaveChanges();
             return GetDefaultResponse(inputMessage.Chat.Id, text);
         }
 
-        public static OutputUserMessage GetDefaultResponse(long chatId, string additionalText = "")
+        public static TelegramUserMessage GetDefaultResponse(long chatId, string additionalText = "")
         {
-            return new OutputUserMessage()
+            return new TelegramUserMessage()
             {
                 ChatId = chatId,
                 Text = $"{additionalText}\nВыбери что тебе нужно сделать:",

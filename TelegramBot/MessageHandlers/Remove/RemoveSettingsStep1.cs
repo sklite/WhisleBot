@@ -20,7 +20,7 @@ namespace WhisleBotConsole.TelegramBot.MessageHandlers
             _vk = vk;
         }
 
-        public override OutputUserMessage GetResponseTo(Message inputMessage, User user)
+        public override TelegramUserMessage GetResponseTo(Message inputMessage, User user)
         {
             var currentSubscriptions = _db.Preferences.Where(pref => pref.User.Id == user.Id);
             var keyboard = MessageMarkupUtilities.GetReplyKeyboardForGroups(currentSubscriptions);
@@ -31,7 +31,7 @@ namespace WhisleBotConsole.TelegramBot.MessageHandlers
 
             var replyMarkup = new ReplyKeyboardMarkup(keyboard, resizeKeyboard: true, oneTimeKeyboard: true);
 
-            return new OutputUserMessage()
+            return new TelegramUserMessage()
             {
                 ChatId = inputMessage.Chat.Id,
                 Text = TgBotText.RemoveSubscriptionsLink,

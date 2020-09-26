@@ -9,9 +9,11 @@ using System.Text;
 using System.Threading.Tasks;
 using Telegram.Bot;
 using Telegram.Bot.Args;
+using Telegram.Bot.Types;
 using Telegram.Bot.Types.ReplyMarkups;
 using WhisleBotConsole.Config;
 using WhisleBotConsole.DB;
+using WhisleBotConsole.Models;
 using WhisleBotConsole.TelegramBot;
 
 namespace BotServer.TelegramBot
@@ -21,13 +23,13 @@ namespace BotServer.TelegramBot
         readonly ITelegramMessageRouter _messageRouter;
         readonly UsersContext _context;
         readonly Settings _settings;
-        readonly ITelegramBotClient botClient;
-        public TelegramBotService(ITelegramMessageRouter messageRouter, UsersContext context, IOptions<Settings> settings)
+        readonly ITelegramBotClient _botClient;
+        public TelegramBotService(ITelegramMessageRouter messageRouter, ITelegramBotClient botClient, UsersContext context, IOptions<Settings> settings)
         {
             _messageRouter = messageRouter;
             _context = context;
             _settings = settings.Value;
-            botClient = new TelegramBotClient(_settings.Telegram.AccessT);
+            _botClient = botClient;
             var me = botClient.GetMeAsync().Result;
             Console.WriteLine(
               $"Hello, World! I am user {me.Id} and my name is {me.FirstName}."
@@ -36,31 +38,38 @@ namespace BotServer.TelegramBot
             botClient.OnMessage += Bot_OnMessage;
 
         }
-
         public bool Start()
         {
-            botClient.StartReceiving();
+            _botClient.StartReceiving();
             return true;
         }
 
         public bool Stop()
         {
-            botClient.StopReceiving();
+            _botClient.StopReceiving();
             return true;
         }
 
-        private async void Bot_OnMessage(object sender, MessageEventArgs e)
+        private void Bot_OnMessage(object sender, MessageEventArgs e)
         {
             if (e.Message.Text != null)
             {
-                var outMessage = _messageRouter.ProcessMessage(e.Message);
-
-                await botClient.SendTextMessageAsync(
-                    outMessage.ChatId,
-                    outMessage.Text,
-                    Telegram.Bot.Types.Enums.ParseMode.Markdown,
-                    replyMarkup: outMessage.ReplyMarkup);
+                _messageRouter.ProcessMessageAsync(e.Message);
             }
         }
+        //public async Task SendMessages(List<TelegramUserMessage> messages)
+        //{
+        //    if (messages == null || !messages.Any())
+        //        return;
+
+        //    foreach (var message in messages)
+        //    {
+        //        await botClient.SendTextMessageAsync(
+        //            message.ChatId,
+        //            message.Text,
+        //            Telegram.Bot.Types.Enums.ParseMode.Markdown,
+        //            replyMarkup: message.ReplyMarkup);
+        //    }
+        //}
     }
 }

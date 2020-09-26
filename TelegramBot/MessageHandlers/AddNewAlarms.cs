@@ -18,13 +18,13 @@ namespace WhisleBotConsole.TelegramBot.MessageHandlers
 
         }
 
-        public override OutputUserMessage GetResponseTo(Message inputMessage, User user)
+        public override TelegramUserMessage GetResponseTo(Message inputMessage, User user)
         {
             user.State = ChatState.NewGroupToAdd;
             _db.SaveChanges();
 
 
-            return new OutputUserMessage()
+            return new TelegramUserMessage()
             {
                 ChatId = inputMessage.Chat.Id,
                 Text = TgBotText.ReplyInputIdOrLink,

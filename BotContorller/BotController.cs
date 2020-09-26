@@ -12,14 +12,14 @@ namespace WhisleBotConsole
 {
     class BotController : IBotController
     {
-        private readonly IOptions<Settings> _settings;
+        private readonly Settings _settings;
         private readonly ITelegramService _botService;
         private readonly IVkGroupsSearcher _vkGroupSearcher;
         private readonly Logger _logger;
 
         public BotController(IOptions<Settings> settings, ITelegramService botService, IVkGroupsSearcher groupSearcher)
         {
-            _settings = settings;
+            _settings = settings.Value;
             _botService = botService;
             _vkGroupSearcher = groupSearcher;
             _logger = LogManager.GetCurrentClassLogger();
@@ -30,7 +30,7 @@ namespace WhisleBotConsole
             _botService.Start();
             _logger.Info($"Bot started");
 
-            _vkGroupSearcher.StartSearch(3000);
+            _vkGroupSearcher.StartSearch(_settings.Vkontakte.BaseSearchInterval);
         }
 
         public void Stop()

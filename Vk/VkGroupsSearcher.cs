@@ -1,12 +1,15 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.Extensions.Options;
 using NLog;
 using System;
 using System.Linq;
+using System.Threading;
 using System.Timers;
 using VkNet;
 using VkNet.Model;
 using VkNet.Model.RequestParams;
+using WhisleBotConsole.BotContorller;
 using WhisleBotConsole.Config;
 using WhisleBotConsole.DB;
 using WhisleBotConsole.Vk.Posts;
@@ -15,14 +18,20 @@ namespace WhisleBotConsole.Vk
 {
     class VkGroupsSearcher : IVkGroupsSearcher
     {
-        readonly VkApi _api;
-        readonly Logger _logger;
+        private readonly VkApi _api;        
+        private readonly Logger _logger;
         private readonly UsersContext _usersContext;
         private readonly IPostKeywordSearcher _keywordSearcher;
+        private readonly IUserNotifier _userNotifier;
         private readonly Settings _settings;
-        Timer _timer;
+        private bool IsSearching = false;
+        System.Timers.Timer _timer;
 
-        public VkGroupsSearcher(UsersContext usersContect, IPostKeywordSearcher keywordSearcher, IOptions<Settings> settings)
+
+        public VkGroupsSearcher(UsersContext usersContect,
+            IPostKeywordSearcher keywordSearcher,
+            IUserNotifier userNotifier,
+            IOptions<Settings> settings)
         {
             _settings = settings.Value;
             _api = new VkApi();
@@ -39,6 +48,7 @@ namespace WhisleBotConsole.Vk
             Console.WriteLine(_api.Token);
             _usersContext = usersContect;
             _keywordSearcher = keywordSearcher;
+            _userNotifier = userNotifier;
         }
         private void SetTimer(int milliseconds)
         {
@@ -60,25 +70,24 @@ namespace WhisleBotConsole.Vk
 
         private void OnTimedEvent(object sender, ElapsedEventArgs e)
         {
-            _logger.Info("tick event"); 
-        }
+            _logger.Info("Searching mentions...");
+            //Avoid multiple vk calls at the same time
+            if (IsSearching)
+                return;
 
-        public void StartSearch(int interval)
-        {
-            SetTimer(interval);
-            _timer.Start();
-
-            foreach (var prefs in _usersContext.Preferences)
+            IsSearching = true;
+            var allPrefs = _usersContext.Preferences.Include(u => u.User);
+            foreach (var prefs in allPrefs)
             {
                 if (prefs.GroupId > 0 && !string.IsNullOrEmpty(prefs.Keyword))
                 {
                     var keywords = PrepareKeywords(prefs.Keyword);
                     var wallGeParams = new WallGetParams
                     {
-                        Count = 50,
+                        Count = 5,
                         OwnerId = -prefs.GroupId
                     };
-
+                    Thread.Sleep(1000);
                     var getResult = _api.Wall.Get(wallGeParams);
                     var posts = getResult.WallPosts;
 
@@ -88,11 +97,18 @@ namespace WhisleBotConsole.Vk
                         if (!searchResult.Contains)
                             continue;
 
-
+                        _userNotifier.NotifyUser(prefs.User.Id, prefs.GroupId, post.Id.Value, searchResult.Word);
                     }
 
                 }
             }
+            IsSearching = false;
+        }
+
+        public void StartSearch(int interval)
+        {
+            SetTimer(interval);
+            _timer.Start();   
         }
 
         public void StopSearch()

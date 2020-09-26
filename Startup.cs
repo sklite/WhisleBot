@@ -4,6 +4,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using NLog.Extensions.Logging;
 using System;
+using Telegram.Bot;
+using WhisleBotConsole.BotContorller;
 using WhisleBotConsole.Config;
 using WhisleBotConsole.DB;
 using WhisleBotConsole.TelegramBot;
@@ -47,12 +49,15 @@ namespace WhisleBotConsole
                 settings.Vkontakte = vkSettings;
             });
 
+            services.AddSingleton<ITelegramBotClient>(new TelegramBotClient(tgSettings.AccessT));
             services.AddSingleton<IBotController, BotController>();
             services.AddSingleton<IVkGroupsSearcher, VkGroupsSearcher>();
             services.AddSingleton<VkGroupsSearcher>();
             services.AddSingleton<ITelegramService, TelegramBotService>();
             services.AddSingleton<ITelegramMessageRouter, TelegramMessageRouter>();
             services.AddSingleton<IPostKeywordSearcher, StupidKeywordSearcher>();
+            services.AddSingleton<IMessageSender, TelegramMessageSender>();
+            services.AddSingleton<IUserNotifier, UserNewMentionsNotifier>();
 
             services.AddDbContext<UsersContext>();
             services.AddLogging(loggingBuilder =>

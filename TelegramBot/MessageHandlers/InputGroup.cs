@@ -18,7 +18,7 @@ namespace WhisleBotConsole.TelegramBot.MessageHandlers
             _vk = vk;
         }
 
-        public override OutputUserMessage GetResponseTo(Message inputMessage, User user)
+        public override TelegramUserMessage GetResponseTo(Message inputMessage, User user)
         {
             if (string.IsNullOrEmpty(inputMessage.Text))            
                 return FailWithText(inputMessage, user, "Введено пустое слово");
@@ -38,7 +38,7 @@ namespace WhisleBotConsole.TelegramBot.MessageHandlers
             user.State = ChatState.NewWordToGroupAdd;
             _db.SaveChanges();
 
-            return new OutputUserMessage()
+            return new TelegramUserMessage()
             {
                 ChatId = inputMessage.Chat.Id,
                 Text = @"Введите слова или фразы через запятую, какие следует искать в этой группе. Например _однушка, однушку, перекопка, торты, аренда_",

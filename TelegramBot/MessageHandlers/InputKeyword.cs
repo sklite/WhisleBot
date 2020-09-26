@@ -18,7 +18,7 @@ namespace WhisleBotConsole.TelegramBot.MessageHandlers
         {
 
         }
-        public override OutputUserMessage GetResponseTo(Message inputMessage, User user)
+        public override TelegramUserMessage GetResponseTo(Message inputMessage, User user)
         {
             if (string.IsNullOrEmpty(inputMessage.Text))
             {
@@ -57,7 +57,7 @@ namespace WhisleBotConsole.TelegramBot.MessageHandlers
             user.State = ChatState.Standrard;
             _db.SaveChanges();
 
-            return new OutputUserMessage()
+            return new TelegramUserMessage()
             {
                 ChatId = inputMessage.Chat.Id,
                 Text = @$"Отлично. Слова записаны. Когда в группе *{userPrefs.GroupName}* (id:_{userPrefs.GroupId}_) появятся новые посты со следюующими словами: _{inputMessage.Text}_ Вы получите уведомление сюда",
