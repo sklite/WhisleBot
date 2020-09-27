@@ -8,11 +8,11 @@ using User = WhisleBotConsole.DB.User;
 
 namespace WhisleBotConsole.TelegramBot.MessageHandlers
 {
-    class InputGroup : BaseTgMessageHandler
+    class Step2InputGroup : BaseTgMessageHandler
     {
         private readonly IVkGroupsSearcher _vk;
 
-        public InputGroup(UsersContext db, IVkGroupsSearcher vk)
+        public Step2InputGroup(UsersContext db, IVkGroupsSearcher vk)
             : base(db)
         {
             _vk = vk;

@@ -27,29 +27,37 @@ namespace WhisleBotConsole.TelegramBot
             _logger = LogManager.GetCurrentClassLogger();
             _messageHandlers = new Dictionary<ChatState, BaseTgMessageHandler>
             {
-                { ChatState.NewGroupToAdd, new InputGroup(_db, vk) },
-                { ChatState.NewWordToGroupAdd, new InputKeyword(_db) },
+                { ChatState.NewGroupToAdd, new Step2InputGroup(_db, vk) },
+                { ChatState.NewWordToGroupAdd, new Step3InputKeyword(_db) },
                 { ChatState.EditExistingGroup, new UpdateKeywords(_db) },
                 { ChatState.RemoveSettingsStep1, new RemoveSettingsStep2(_db) }
             };
 
             _commandHandlers = new Dictionary<string, BaseTgMessageHandler>
             {
-                { TgBotText.AddNewSettings, new AddNewAlarms(_db) },
+                { TgBotText.AddNewSettings, new Step1AddNewAlarms(_db) },
                 { TgBotText.EditExistingSettings, new EditExistingSettings(_db, vk) },
                 { TgBotText.RemoveSubscriptions, new RemoveSettingsStep1(_db, vk) }
             };
         }
 
-        protected User GetOrCreateUser(long chatId)
+        protected User GetOrCreateUser(Chat tgChat)
         {
-            var user = _db.Users.Where(user => user.ChatId == chatId).FirstOrDefault();
+            var user = _db.Users.Where(user => user.ChatId == tgChat.Id).FirstOrDefault();
             if (user == null)
             {
-                user = new DB.User() { ChatId = chatId };
+                user = new DB.User() { ChatId = tgChat.Id, Username = tgChat.Username, Title = tgChat.Title };
                 _db.Users.Add(user);
                 _db.SaveChanges();
             }
+
+            if (user.Username != tgChat.Username || user.Title != $"{tgChat.FirstName} {tgChat.LastName}")
+            {
+                user.Username = tgChat.Username;
+                user.Title = $"{tgChat.FirstName} {tgChat.LastName}";
+                _db.SaveChanges();
+            }
+
             return user;
         }
 
@@ -62,7 +70,7 @@ namespace WhisleBotConsole.TelegramBot
                 resultMessage = BaseTgMessageHandler.GetDefaultResponse(inputMessage.Chat.Id);
 
             _logger.Info($"Incoming message from {inputMessage.Chat.Id}. Message content: \"{inputMessage.Text}\"");
-            var user = GetOrCreateUser(inputMessage.Chat.Id);
+            var user = GetOrCreateUser(inputMessage.Chat);
 
             if (_messageHandlers.ContainsKey(user.State))
                 resultMessage = _messageHandlers[user.State].GetResponseTo(inputMessage, user);
