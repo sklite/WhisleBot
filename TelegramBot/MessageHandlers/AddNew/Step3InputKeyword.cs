@@ -11,9 +11,9 @@ using User = WhisleBotConsole.DB.User;
 
 namespace WhisleBotConsole.TelegramBot.MessageHandlers
 {
-    class InputKeyword : BaseTgMessageHandler
+    class Step3InputKeyword : BaseTgMessageHandler
     {
-        public InputKeyword(UsersContext _db)
+        public Step3InputKeyword(UsersContext _db)
             : base(_db)
         {
 

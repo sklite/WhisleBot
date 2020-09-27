@@ -10,9 +10,9 @@ using User = WhisleBotConsole.DB.User;
 
 namespace WhisleBotConsole.TelegramBot.MessageHandlers
 {
-    class AddNewAlarms : BaseTgMessageHandler
+    class Step1AddNewAlarms : BaseTgMessageHandler
     {
-        public AddNewAlarms(UsersContext _db)
+        public Step1AddNewAlarms(UsersContext _db)
             :base(_db)
         {
 

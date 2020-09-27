@@ -13,6 +13,8 @@ namespace WhisleBotConsole.DB
         [Key]
         public int Id { get; set; }
         public long ChatId { get; set; }
+        public string Username { get; set; }
+        public string Title { get; set; }
         public ChatState State { get; set; }
         public long? CurrentGroupId { get; set; }
         public string CurrentGroupName { get; set; }

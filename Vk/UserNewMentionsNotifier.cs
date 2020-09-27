@@ -40,7 +40,7 @@ namespace WhisleBotConsole.Vk
                 Text = $"В группе id:{groupId} {groupName ?? string.Empty} В посте {postId}  упоминается слово _{keyword}_. [Ссылка](https://vk.com/wall-{groupId}_{postId}/) "
             };
 
-            _logger.Info($"Notifying user {user.Id} with textL {message.Text}");
+            _logger.Info($"Notifying user {user.Username} {user.Title} (id: {user.Id}) with text {message.Text}");
             _messageSender.SendMessageToUser(message);
         }
     }
