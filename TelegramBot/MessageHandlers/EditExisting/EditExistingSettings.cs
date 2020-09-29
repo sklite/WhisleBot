@@ -12,9 +12,9 @@ namespace WhisleBotConsole.TelegramBot.MessageHandlers
 {
     class EditExistingSettings : BaseTgMessageHandler
     {
-        private readonly IVkGroupsSearcher _vk;
+        private readonly IVkGroupsCrawler _vk;
 
-        public EditExistingSettings(UsersContext db, IVkGroupsSearcher vk)
+        public EditExistingSettings(UsersContext db, IVkGroupsCrawler vk)
             : base(db)
         {
             _vk = vk;

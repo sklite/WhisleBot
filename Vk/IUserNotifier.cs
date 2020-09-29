@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using WhisleBotConsole.DB;
 
 namespace WhisleBotConsole.Vk
 {
     interface IUserNotifier
     {
-        void NotifyUser(long iserId, long groupId, string groupName, long postId, string keyword);
+        void NotifyUser(UserPreference preference, long postId, string keyword);
     }
 }

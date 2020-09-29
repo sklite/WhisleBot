@@ -1,9 +1,11 @@
-﻿using System;
+﻿using Microsoft.Extensions.Options;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.ReplyMarkups;
+using WhisleBotConsole.Config;
 using WhisleBotConsole.DB;
 using WhisleBotConsole.Models;
 using WhisleBotConsole.TelegramBot.MarkupUtils;
@@ -13,25 +15,30 @@ namespace WhisleBotConsole.TelegramBot.MessageHandlers
 {
     class Step3InputKeyword : BaseTgMessageHandler
     {
-        public Step3InputKeyword(UsersContext _db)
+        private readonly Settings _settings;
+
+        public Step3InputKeyword(UsersContext _db, IOptions<Settings> settings)
             : base(_db)
         {
-
+            _settings = settings.Value;
         }
         public override TelegramUserMessage GetResponseTo(Message inputMessage, User user)
         {
             if (string.IsNullOrEmpty(inputMessage.Text))
             {
-                return GetDefaultResponse(inputMessage.Chat.Id, "Пустой текст не является ключевым словом");
+                return FailWithText(inputMessage.Chat.Id, user, "Пустой текст не является ключевым словом");
+            }
+
+            if (inputMessage.Text.Length > _settings.Vkontakte.KeywordCharacterLimit)
+            {
+                return FailWithText(inputMessage.Chat.Id, user, $"Введён слишком длинный текст. Текущий лимит {_settings.Vkontakte.KeywordCharacterLimit} символов.");
             }
 
             if (user.CurrentGroupId == null)
             {
                 user.CurrentGroupId = null;
                 user.CurrentGroupName = null;
-                user.State = ChatState.Standrard;
-                _db.SaveChanges();
-                return GetDefaultResponse(inputMessage.Chat.Id, @"Что-то пошло не так\. Попробуйте ещё раз");
+                return FailWithText(inputMessage.Chat.Id, user, @"Что-то пошло не так\. Попробуйте ещё раз или позже");
             }
 
             var userPrefs = _db.Preferences.Where(pref => pref.User.Id == user.Id && pref.GroupId == user.CurrentGroupId).FirstOrDefault();
@@ -43,7 +50,8 @@ namespace WhisleBotConsole.TelegramBot.MessageHandlers
                     User = user,
                     GroupId = user.CurrentGroupId.Value,
                     GroupName = user.CurrentGroupName,
-                    Keyword = inputMessage.Text
+                    Keyword = inputMessage.Text,
+                    LastNotifiedPostTime = DateTime.MinValue
                 };
                 _db.Preferences.Add(userPrefs);
             }

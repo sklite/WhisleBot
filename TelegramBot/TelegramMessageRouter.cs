@@ -1,9 +1,11 @@
-﻿using NLog;
+﻿using Microsoft.Extensions.Options;
+using NLog;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Telegram.Bot.Types;
 using WhisleBotConsole.BotContorller;
+using WhisleBotConsole.Config;
 using WhisleBotConsole.DB;
 using WhisleBotConsole.Models;
 using WhisleBotConsole.TelegramBot.MessageHandlers;
@@ -20,7 +22,7 @@ namespace WhisleBotConsole.TelegramBot
         private readonly IMessageSender _messageSender;
         private readonly Logger _logger;
 
-        public TelegramMessageRouter(UsersContext db, IVkGroupsSearcher vk, IMessageSender messageSender)
+        public TelegramMessageRouter(UsersContext db, IVkGroupsCrawler vk, IMessageSender messageSender, IOptions<Settings> settings)
         {
             _db = db;
             _messageSender = messageSender;
@@ -28,14 +30,14 @@ namespace WhisleBotConsole.TelegramBot
             _messageHandlers = new Dictionary<ChatState, BaseTgMessageHandler>
             {
                 { ChatState.NewGroupToAdd, new Step2InputGroup(_db, vk) },
-                { ChatState.NewWordToGroupAdd, new Step3InputKeyword(_db) },
+                { ChatState.NewWordToGroupAdd, new Step3InputKeyword(_db, settings) },
                 { ChatState.EditExistingGroup, new UpdateKeywords(_db) },
                 { ChatState.RemoveSettingsStep1, new RemoveSettingsStep2(_db) }
             };
 
             _commandHandlers = new Dictionary<string, BaseTgMessageHandler>
             {
-                { TgBotText.AddNewSettings, new Step1AddNewAlarms(_db) },
+                { TgBotText.AddNewSettings, new Step1AddNewAlarms(_db, settings) },
                 { TgBotText.EditExistingSettings, new EditExistingSettings(_db, vk) },
                 { TgBotText.RemoveSubscriptions, new RemoveSettingsStep1(_db, vk) }
             };
