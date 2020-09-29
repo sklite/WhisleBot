@@ -5,6 +5,8 @@ using Microsoft.Extensions.Logging;
 using NLog.Extensions.Logging;
 using System;
 using Telegram.Bot;
+using VkNet;
+using VkNet.Abstractions;
 using WhisleBotConsole.BotContorller;
 using WhisleBotConsole.Config;
 using WhisleBotConsole.DB;
@@ -49,15 +51,27 @@ namespace WhisleBotConsole
                 settings.Vkontakte = vkSettings;
             });
 
-            services.AddSingleton<ITelegramBotClient>(new TelegramBotClient(tgSettings.AccessT));
+
+            services.AddSingleton<ITelegramBotClient>(new TelegramBotClient(tgSettings.AccessT));   
             services.AddSingleton<IBotController, BotController>();
-            services.AddSingleton<IVkGroupsSearcher, VkGroupsSearcher>();
-            services.AddSingleton<VkGroupsSearcher>();
+            services.AddSingleton<IVkGroupsCrawler, VkGroupsCrawler>();
+            services.AddSingleton<VkGroupsCrawler>();
             services.AddSingleton<ITelegramService, TelegramBotService>();
             services.AddSingleton<ITelegramMessageRouter, TelegramMessageRouter>();
             services.AddSingleton<IPostKeywordSearcher, StupidKeywordSearcher>();
             services.AddSingleton<IMessageSender, TelegramMessageSender>();
             services.AddSingleton<IUserNotifier, UserNewMentionsNotifier>();
+            services.AddSingleton<IVkService, VkService>();
+
+            var vkApi = new VkApi();
+            vkApi.Authorize(new VkNet.Model.ApiAuthParams
+            {
+                ApplicationId = vkSettings.AppId,
+                Login = vkSettings.Login,
+                Password = vkSettings.Password,
+                Settings = VkNet.Enums.Filters.Settings.All
+            });
+            services.AddSingleton<IVkApi>(vkApi);
 
             services.AddDbContext<UsersContext>();
             services.AddLogging(loggingBuilder =>

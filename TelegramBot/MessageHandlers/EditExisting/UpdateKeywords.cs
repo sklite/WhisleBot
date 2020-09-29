@@ -18,16 +18,16 @@ namespace WhisleBotConsole.TelegramBot.MessageHandlers
         public override TelegramUserMessage GetResponseTo(Message inputMessage, User user)
         {
             if (inputMessage.Text == TgBotText.Cancel)
-                return FailWithText(inputMessage, user, "Ну передумал и передумал.");
+                return FailWithText(inputMessage.Chat.Id, user, "Ну передумал и передумал.");
 
             if (!inputMessage.Text.Contains("(id: "))
-                return FailWithText(inputMessage, user, "Не удалось получить id группы");
+                return FailWithText(inputMessage.Chat.Id, user, "Не удалось получить id группы");
 
             var idStr = inputMessage.Text.Split("(id: ", StringSplitOptions.RemoveEmptyEntries).Last();
             idStr = idStr.Split(")", StringSplitOptions.RemoveEmptyEntries).First();
             idStr = new string(idStr.Where(char.IsDigit).ToArray());
             if (!long.TryParse(idStr, out long groupId))
-                return FailWithText(inputMessage, user, "Не удалось получить id группы");
+                return FailWithText(inputMessage.Chat.Id, user, "Не удалось получить id группы");
 
             user.CurrentGroupId = groupId;
             user.State = ChatState.NewWordToGroupAdd;

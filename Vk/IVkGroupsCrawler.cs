@@ -4,10 +4,9 @@ using System.Text;
 
 namespace WhisleBotConsole.Vk
 {
-    interface IVkGroupsSearcher
+    interface IVkGroupsCrawler
     {
+        void DoSearch();
         (bool Success, long GroupId, string GroupName) GetGroupIdByLink(Uri link);
-        void StartSearch(int interval);
-        void StopSearch();
     }
 }

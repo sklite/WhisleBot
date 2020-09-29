@@ -23,11 +23,11 @@ namespace WhisleBotConsole.TelegramBot.MessageHandlers
 
         public abstract TelegramUserMessage GetResponseTo(Message inputMessage, User user);
 
-        protected TelegramUserMessage FailWithText(Message inputMessage, User user, string text)
+        protected TelegramUserMessage FailWithText(long chatId, User user, string text)
         {
             user.State = ChatState.Standrard;
             _db.SaveChanges();
-            return GetDefaultResponse(inputMessage.Chat.Id, text);
+            return GetDefaultResponse(chatId, text);
         }
 
         public static TelegramUserMessage GetDefaultResponse(long chatId, string additionalText = "")

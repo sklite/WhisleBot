@@ -19,20 +19,20 @@ namespace WhisleBotConsole.TelegramBot.MessageHandlers
         public override TelegramUserMessage GetResponseTo(Message inputMessage, User user)
         {
             if (inputMessage.Text == TgBotText.Cancel)
-                return FailWithText(inputMessage, user, "Ну передумал и передумал.");
+                return FailWithText(inputMessage.Chat.Id, user, "Ну передумал и передумал.");
             if (!inputMessage.Text.Contains("(id: "))
-                return FailWithText(inputMessage, user, "Не удалось получить id группы");
+                return FailWithText(inputMessage.Chat.Id, user, "Не удалось получить id группы");
 
             var idStr = inputMessage.Text.Split("(id: ", StringSplitOptions.RemoveEmptyEntries).Last();
             idStr = idStr.Split(")", StringSplitOptions.RemoveEmptyEntries).First();
             idStr = new string(idStr.Where(char.IsDigit).ToArray());
             if (!long.TryParse(idStr, out long groupId))
-                return FailWithText(inputMessage, user, "Не удалось получить id группы");
+                return FailWithText(inputMessage.Chat.Id, user, "Не удалось получить id группы");
 
             var groupsToRemove = _db.Preferences.Where(pref => pref.User.Id == user.Id && pref.GroupId == groupId);
             if (groupsToRemove == null || !groupsToRemove.Any())
             {
-                return FailWithText(inputMessage, user, $"Группа с указанным id:{groupId} не найдена в подписках");
+                return FailWithText(inputMessage.Chat.Id, user, $"Группа с указанным id:{groupId} не найдена в подписках");
             }
             _db.Preferences.RemoveRange(groupsToRemove);
             user.State = ChatState.Standrard;

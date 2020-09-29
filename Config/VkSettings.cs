@@ -10,5 +10,7 @@ namespace WhisleBotConsole.Config
         public string Password { get; set; }
         public ulong AppId { get; set; }
         public int BaseSearchInterval { get; set; }
+        public int BaseSubscriptionsLimit { get; set; }
+        public int KeywordCharacterLimit { get; set; }
     }
 }

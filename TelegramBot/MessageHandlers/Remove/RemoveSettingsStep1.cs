@@ -12,9 +12,9 @@ namespace WhisleBotConsole.TelegramBot.MessageHandlers
 {
     class RemoveSettingsStep1 : BaseTgMessageHandler
     {
-        private readonly IVkGroupsSearcher _vk;
+        private readonly IVkGroupsCrawler _vk;
 
-        public RemoveSettingsStep1(UsersContext db, IVkGroupsSearcher vk)
+        public RemoveSettingsStep1(UsersContext db, IVkGroupsCrawler vk)
             : base(db)
         {
             _vk = vk;

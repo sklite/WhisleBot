@@ -10,9 +10,9 @@ namespace WhisleBotConsole.TelegramBot.MessageHandlers
 {
     class Step2InputGroup : BaseTgMessageHandler
     {
-        private readonly IVkGroupsSearcher _vk;
+        private readonly IVkGroupsCrawler _vk;
 
-        public Step2InputGroup(UsersContext db, IVkGroupsSearcher vk)
+        public Step2InputGroup(UsersContext db, IVkGroupsCrawler vk)
             : base(db)
         {
             _vk = vk;
@@ -21,17 +21,17 @@ namespace WhisleBotConsole.TelegramBot.MessageHandlers
         public override TelegramUserMessage GetResponseTo(Message inputMessage, User user)
         {
             if (string.IsNullOrEmpty(inputMessage.Text))            
-                return FailWithText(inputMessage, user, "Введено пустое слово");
+                return FailWithText(inputMessage.Chat.Id, user, "Введено пустое слово");
 
             var inputText = inputMessage.Text;
 
             if (!Uri.TryCreate(inputText, UriKind.Absolute, out Uri uriResult))            
-                return FailWithText(inputMessage, user, "Введён некорректный URL");
+                return FailWithText(inputMessage.Chat.Id, user, "Введён некорректный URL");
 
             
             var getGroupIdResult = _vk.GetGroupIdByLink(uriResult);
             if (!getGroupIdResult.Success)
-                return FailWithText(inputMessage, user, "Не удалось получть id группы");
+                return FailWithText(inputMessage.Chat.Id, user, "Не удалось получть id группы");
 
             user.CurrentGroupId = getGroupIdResult.GroupId;
             user.CurrentGroupName = getGroupIdResult.GroupName;

@@ -13,5 +13,6 @@ namespace WhisleBotConsole.DB
         public long GroupId { get; set; }
         public string GroupName { get; set; }
         public string Keyword { get; set; }
+        public DateTime LastNotifiedPostTime { get; set; }
     }
 }

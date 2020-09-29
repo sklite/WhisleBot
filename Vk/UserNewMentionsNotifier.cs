@@ -1,11 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using NLog;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Telegram.Bot.Exceptions;
+﻿using NLog;
 using WhisleBotConsole.BotContorller;
 using WhisleBotConsole.DB;
 using WhisleBotConsole.Models;
@@ -26,18 +19,25 @@ namespace WhisleBotConsole.Vk
         }
 
 
-        public void NotifyUser(long userId, long groupId, string groupName, long postId, string keyword)
+        public void NotifyUser(UserPreference preference, long postId, string keyword)
         {
-            var user = _db.Users.Where(user => user.Id == userId).FirstOrDefault();
+            if (preference == null)
+            {
+                _logger.Error($"Null preference settings. Found keyword:{keyword}");
+                return;
+            }
+            var user = preference.User;
+
             if (user == null)
             {
-                _logger.Error($"Cannot find user with id:{userId}. Found keyword:{keyword}");
+                _logger.Error($"Cannot find user for preferenceId:{preference.Id}. Found keyword:{keyword}");
+                return;
             }
 
             var message = new TelegramUserMessage()
             {
                 ChatId = user.ChatId,
-                Text = $"В группе id:{groupId} {groupName ?? string.Empty} В посте {postId}  упоминается слово _{keyword}_. [Ссылка](https://vk.com/wall-{groupId}_{postId}/) "
+                Text = $"В группе *{preference.GroupName}* (id:{preference.GroupId}) В [посте](https://vk.com/wall-{preference.GroupId}_{postId}/) упоминается слово _{keyword}_. "
             };
 
             _logger.Info($"Notifying user {user.Username} {user.Title} (id: {user.Id}) with text {message.Text}");
