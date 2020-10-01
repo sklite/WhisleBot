@@ -45,11 +45,23 @@ namespace WhisleBotConsole.TelegramBot
 
         protected User GetOrCreateUser(Chat tgChat)
         {
-            var user = _db.Users.Where(user => user.ChatId == tgChat.Id).FirstOrDefault();
+            _logger.Info("Calling _db.Users.Where..");
+            User user = null;
+            try
+            {
+                user = _db.Users.Where(user => user.ChatId == tgChat.Id).FirstOrDefault();
+            }
+            catch (System.Exception ex)
+            {
+                _logger.Error($"Caught exception {ex}");
+            }
+            
+            _logger.Info("End calling _db.Users.Where..");
             if (user == null)
             {
                 user = new DB.User() { ChatId = tgChat.Id, Username = tgChat.Username, Title = tgChat.Title };
                 _db.Users.Add(user);
+                _logger.Info("Saving changes..");
                 _db.SaveChanges();
             }
 

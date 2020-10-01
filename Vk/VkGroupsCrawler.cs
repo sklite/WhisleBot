@@ -65,31 +65,38 @@ namespace WhisleBotConsole.Vk
             var allPrefs = _usersContext.Preferences.Include(u => u.User);
             foreach (var prefs in allPrefs)
             {
-                if (ValidForSearch(prefs))
+                try
                 {
-                    var keywords = PrepareKeywords(prefs.Keyword);
-                    var wallGeParams = new WallGetParams
+                    if (ValidForSearch(prefs))
                     {
-                        Count = 5,
-                        OwnerId = -prefs.GroupId
-                    };
-                    Thread.Sleep(1000);
-                    var getResult = _api.Wall.Get(wallGeParams);
-                    var posts = getResult.WallPosts;
+                        var keywords = PrepareKeywords(prefs.Keyword);
+                        var wallGeParams = new WallGetParams
+                        {
+                            Count = 50,
+                            OwnerId = -prefs.GroupId
+                        };
+                        Thread.Sleep(1000);
+                        var getResult = _api.Wall.Get(wallGeParams);
+                        var posts = getResult.WallPosts;
 
-                    foreach (var post in posts.Reverse())
-                    {
-                        var searchResult = _keywordSearcher.LookIntoPost(post, keywords);
-                        if (!searchResult.Contains)
-                            continue;
+                        foreach (var post in posts.Reverse())
+                        {
+                            var searchResult = _keywordSearcher.LookIntoPost(post, keywords);
+                            if (!searchResult.Contains)
+                                continue;
 
-                        if (post.Date <= prefs.LastNotifiedPostTime)
-                            continue;
+                            if (post.Date <= prefs.LastNotifiedPostTime)
+                                continue;
 
-                        prefs.LastNotifiedPostTime = post.Date ?? DateTime.Now;
-                        _userNotifier.NotifyUser(prefs, post.Id.Value, searchResult.Word);
+                            prefs.LastNotifiedPostTime = post.Date ?? DateTime.Now;
+                            _userNotifier.NotifyUser(prefs, post.Id.Value, searchResult.Word);
+                        }
+
                     }
-
+                }
+                catch (Exception ex)
+                {
+                    _logger.Error(ex, $"Error while fetching VK groups. {ex}");
                 }
             }
             _usersContext.SaveChanges();

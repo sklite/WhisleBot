@@ -1,9 +1,11 @@
 ﻿using BotServer.TelegramBot;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using NLog.Extensions.Logging;
 using System;
+using System.Text;
 using Telegram.Bot;
 using VkNet;
 using VkNet.Abstractions;
@@ -26,17 +28,19 @@ namespace WhisleBotConsole
             var services = new ServiceCollection();
 
             Configure();
-            ConfigureServices(services, arguments);
+            ConfigureServices(services);
 
             ServiceProvider = services.BuildServiceProvider();
 
-            //var couchbaseAdapter = ServiceProvider.GetService<ICouchbaseAdapter>();
-            //couchbaseAdapter.Initialize();
-            //couchbaseAdapter.Authenticate();
+            var context = ServiceProvider.GetService<UsersContext>();
+            context.Database.Migrate();
         }
 
-        private void ConfigureServices(IServiceCollection services, Arguments arguments)
+        private void ConfigureServices(IServiceCollection services)
         {
+            Console.OutputEncoding = Encoding.UTF8;
+
+
             var config = new ConfigurationBuilder()
                .SetBasePath(System.IO.Directory.GetCurrentDirectory())
                .AddJsonFile($"appsettings.json", true, true)
