@@ -60,7 +60,7 @@ namespace BotServer.TelegramBot
             }
             catch (Exception ex)
             {
-                _logger.Error(ex, "Exception occured in TelegramBotService");
+                _logger.Error(ex, $"Exception occured in TelegramBotService {ex.ToString()}");
             }
         }
     }

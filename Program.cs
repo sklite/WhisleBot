@@ -21,7 +21,7 @@ namespace WhisleBotConsole
                 _botController.Start();
 
                 Console.WriteLine("Press ANY key to exit");
-                Console.ReadKey();
+                Console.Read();
             }
             catch (Exception ex)
             {

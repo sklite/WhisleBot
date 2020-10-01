@@ -46,11 +46,12 @@ namespace WhisleBotConsole.Vk
                 _isSearching = true;
                 _logger.Info("Searching mentions...");
                 _groupSearcher.DoSearch();
-                
+                _logger.Info("Finished searching mentions");
+
             }
             catch (Exception ex)
             {
-                _logger.Error(ex, "Exception occured in VkService.");
+                _logger.Error(ex, $"Exception occured in VkService. {ex.ToString()}");
             }
             finally
             {

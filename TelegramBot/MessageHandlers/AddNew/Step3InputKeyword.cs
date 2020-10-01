@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Options;
+using NLog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -63,6 +64,7 @@ namespace WhisleBotConsole.TelegramBot.MessageHandlers
             user.CurrentGroupId = null;
             user.CurrentGroupName = null;
             user.State = ChatState.Standrard;
+
             _db.SaveChanges();
 
             return new TelegramUserMessage()
