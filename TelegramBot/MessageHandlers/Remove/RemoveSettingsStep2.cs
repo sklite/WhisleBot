@@ -34,13 +34,14 @@ namespace WhisleBotConsole.TelegramBot.MessageHandlers
             {
                 return FailWithText(inputMessage.Chat.Id, user, $"Группа с указанным id:{groupId} не найдена в подписках");
             }
+            var groupName = groupsToRemove.First().GroupName;
             _db.Preferences.RemoveRange(groupsToRemove);
             user.State = ChatState.Standrard;
             _db.SaveChanges();
             return new TelegramUserMessage()
             {
                 ChatId = inputMessage.Chat.Id,
-                Text = "Подписки на ключевые слова групп успешно удалены",
+                Text = $"Подписки на ключевые слова группы *{groupName}* успешно удалены",
                 ReplyMarkup = MessageMarkupUtilities.GetDefaultMarkup()
             };
         }

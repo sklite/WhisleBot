@@ -77,7 +77,7 @@ namespace WhisleBotConsole.Vk
                     var getResult = _api.Wall.Get(wallGeParams);
                     var posts = getResult.WallPosts;
 
-                    foreach (var post in posts)
+                    foreach (var post in posts.Reverse())
                     {
                         var searchResult = _keywordSearcher.LookIntoPost(post, keywords);
                         if (!searchResult.Contains)

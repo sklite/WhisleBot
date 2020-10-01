@@ -41,10 +41,22 @@ namespace WhisleBotConsole.Vk
             //Avoid multiple vk calls at the same time
             if (_isSearching)
                 return;
-            _isSearching = true;
-            _logger.Info("Searching mentions...");
-            _groupSearcher.DoSearch();
-            _isSearching = false;
+            try
+            {
+                _isSearching = true;
+                _logger.Info("Searching mentions...");
+                _groupSearcher.DoSearch();
+                
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex, "Exception occured in VkService.");
+            }
+            finally
+            {
+                _isSearching = false;
+            }
+
         }
 
         public void Start()
