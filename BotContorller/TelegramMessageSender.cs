@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NLog;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,10 +11,12 @@ namespace WhisleBotConsole.BotContorller
     class TelegramMessageSender : IMessageSender
     {
         readonly ITelegramBotClient _botClient;
+        private readonly Logger _logger;
 
         public TelegramMessageSender(ITelegramBotClient botCLient)
         {
             _botClient = botCLient;
+            _logger = LogManager.GetCurrentClassLogger();
         }
 
         public async Task SendMessageToUser(IMessage message)
@@ -23,6 +26,7 @@ namespace WhisleBotConsole.BotContorller
 
             var tgMessage = message as TelegramUserMessage;
 
+            _logger.Info($"Messaging chat {message.ChatId} with text \"{message.Text}\"");
             await _botClient.SendTextMessageAsync(
                 tgMessage.ChatId,
                 tgMessage.Text,

@@ -39,8 +39,7 @@ namespace WhisleBotConsole.Vk
                 ChatId = user.ChatId,
                 Text = $"В группе *{preference.GroupName}* (id:{preference.GroupId}) В [посте](https://vk.com/wall-{preference.GroupId}_{postId}/) упоминается слово _{keyword}_. "
             };
-
-            _logger.Info($"Notifying user {user.Username} {user.Title} (id: {user.Id}) with text {message.Text}");
+                        
             _messageSender.SendMessageToUser(message);
         }
     }

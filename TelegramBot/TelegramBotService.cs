@@ -1,6 +1,7 @@
 ﻿using BotServer.Models;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
+using NLog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,15 +21,13 @@ namespace BotServer.TelegramBot
 {
     class TelegramBotService : ITelegramService
     {
+        readonly Logger _logger;
         readonly ITelegramMessageRouter _messageRouter;
-        readonly UsersContext _context;
-        readonly Settings _settings;
         readonly ITelegramBotClient _botClient;
-        public TelegramBotService(ITelegramMessageRouter messageRouter, ITelegramBotClient botClient, UsersContext context, IOptions<Settings> settings)
+        public TelegramBotService(ITelegramMessageRouter messageRouter, ITelegramBotClient botClient)
         {
+            _logger = LogManager.GetCurrentClassLogger();
             _messageRouter = messageRouter;
-            _context = context;
-            _settings = settings.Value;
             _botClient = botClient;
             var me = botClient.GetMeAsync().Result;
             Console.WriteLine(
@@ -52,24 +51,17 @@ namespace BotServer.TelegramBot
 
         private void Bot_OnMessage(object sender, MessageEventArgs e)
         {
-            if (e.Message.Text != null)
+            try
             {
-                _messageRouter.ProcessMessageAsync(e.Message);
+                if (e.Message.Text != null)
+                {
+                    _messageRouter.ProcessMessageAsync(e.Message);
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex, "Exception occured in TelegramBotService");
             }
         }
-        //public async Task SendMessages(List<TelegramUserMessage> messages)
-        //{
-        //    if (messages == null || !messages.Any())
-        //        return;
-
-        //    foreach (var message in messages)
-        //    {
-        //        await botClient.SendTextMessageAsync(
-        //            message.ChatId,
-        //            message.Text,
-        //            Telegram.Bot.Types.Enums.ParseMode.Markdown,
-        //            replyMarkup: message.ReplyMarkup);
-        //    }
-        //}
     }
 }
