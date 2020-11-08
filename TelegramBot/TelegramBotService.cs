@@ -1,20 +1,7 @@
-﻿using BotServer.Models;
-using Microsoft.Extensions.Options;
-using Newtonsoft.Json;
-using NLog;
+﻿using NLog;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
-using System.Text;
-using System.Threading.Tasks;
 using Telegram.Bot;
 using Telegram.Bot.Args;
-using Telegram.Bot.Types;
-using Telegram.Bot.Types.ReplyMarkups;
-using WhisleBotConsole.Config;
-using WhisleBotConsole.DB;
-using WhisleBotConsole.Models;
 using WhisleBotConsole.TelegramBot;
 
 namespace BotServer.TelegramBot

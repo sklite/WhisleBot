@@ -2,6 +2,7 @@
 using NLog;
 using System;
 using Microsoft.Extensions.DependencyInjection;
+using System.Threading;
 
 namespace WhisleBotConsole
 {
@@ -21,7 +22,8 @@ namespace WhisleBotConsole
                 _botController.Start();
 
                 Console.WriteLine("Press ANY key to exit");
-                Console.Read();
+                new AutoResetEvent(false).WaitOne();
+
             }
             catch (Exception ex)
             {
