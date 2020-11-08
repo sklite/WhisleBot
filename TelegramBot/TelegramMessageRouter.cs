@@ -43,9 +43,8 @@ namespace WhisleBotConsole.TelegramBot
             };
         }
 
-        protected User GetOrCreateUser(Chat tgChat)
+        User DefineUser(Chat tgChat)
         {
-            _logger.Info("Calling _db.Users.Where..");
             User user = null;
             try
             {
@@ -56,7 +55,6 @@ namespace WhisleBotConsole.TelegramBot
                 _logger.Error($"Caught exception {ex}");
             }
             
-            _logger.Info("End calling _db.Users.Where..");
             if (user == null)
             {
                 user = new DB.User() { ChatId = tgChat.Id, Username = tgChat.Username, Title = tgChat.Title };
@@ -75,7 +73,6 @@ namespace WhisleBotConsole.TelegramBot
             return user;
         }
 
-
         public async Task ProcessMessageAsync(Message inputMessage)
         {
             IMessage resultMessage = null;
@@ -84,7 +81,7 @@ namespace WhisleBotConsole.TelegramBot
                 resultMessage = BaseTgMessageHandler.GetDefaultResponse(inputMessage.Chat.Id);
 
             _logger.Info($"Incoming message from {inputMessage.Chat.Id}. Message content: \"{inputMessage.Text}\"");
-            var user = GetOrCreateUser(inputMessage.Chat);
+            var user = DefineUser(inputMessage.Chat);
 
             if (_messageHandlers.ContainsKey(user.State))
                 resultMessage = _messageHandlers[user.State].GetResponseTo(inputMessage, user);
