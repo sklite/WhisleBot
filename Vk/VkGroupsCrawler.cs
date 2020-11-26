@@ -4,32 +4,43 @@ using System;
 using System.Linq;
 using System.Threading;
 using VkNet.Abstractions;
+using VkNet.Exception;
 using VkNet.Model.RequestParams;
 using WhisleBotConsole.DB;
 using WhisleBotConsole.Vk.Posts;
+using WhisleBotConsole.Vk.Extensions;
+using Microsoft.Extensions.Options;
+using WhisleBotConsole.Config;
+using System.Collections.Generic;
+using VkNet.Enums;
 
 namespace WhisleBotConsole.Vk
 {
     class VkGroupsCrawler : IVkGroupsCrawler
     {
-        private readonly IVkApi _api;        
+        private readonly IVkApi _api;
+        private readonly IOptions<Settings> _settings;
         private readonly Logger _logger;
         private readonly UsersContext _usersContext;
         private readonly IPostKeywordSearcher _keywordSearcher;
         private readonly IUserNotifier _userNotifier;
-
+        private readonly List<VkObjectType> _supportedVkTypes;
 
         public VkGroupsCrawler(UsersContext usersContect,
             IPostKeywordSearcher keywordSearcher,
             IUserNotifier userNotifier,
-            IVkApi vkApi)
+            IVkApi vkApi,
+            IOptions<Settings> settings)
         {
             _api = vkApi;
+            _settings = settings;
             _logger = LogManager.GetCurrentClassLogger();
             _usersContext = usersContect;
             _keywordSearcher = keywordSearcher;
             _userNotifier = userNotifier;
+            _supportedVkTypes = new List<VkObjectType> { VkObjectType.Group, VkObjectType.User };
         }
+
         private string[] PrepareKeywords(string keyword)
         {
             if (string.IsNullOrEmpty(keyword))
@@ -37,13 +48,14 @@ namespace WhisleBotConsole.Vk
             var keywords = keyword.ToLower().Split(',');
             return keywords;
         }
+
         public (bool Success, long GroupId, string GroupName) GetGroupIdByLink(Uri link)
         {
             try
             {
                 var groupIdentifier = link.PathAndQuery.Split("/", StringSplitOptions.RemoveEmptyEntries).Last();
                 var vkObj = _api.Utils.ResolveScreenName(groupIdentifier);
-                if (vkObj == null || vkObj.Type != VkNet.Enums.VkObjectType.Group)
+                if (vkObj == null || !_supportedVkTypes.Contains(vkObj.Type))
                     return (false, -1, string.Empty);
 
                 var groupInfo = _api.Groups.GetById(null, vkObj.Id.Value.ToString(), VkNet.Enums.Filters.GroupsFields.Description);
@@ -92,6 +104,16 @@ namespace WhisleBotConsole.Vk
                             _userNotifier.NotifyUser(prefs, post.Id.Value, searchResult.Word);
                         }
 
+                    }
+                }
+                catch(UserAuthorizationFailException ex)
+                {
+                    _logger.Error($"UserAuthorizationException. {ex}");
+                    //if (!_api.IsAuthorized)
+                    {
+                        _logger.Info($"VkApi wasn't authorized. Authorizing..");
+                        _api.SimpleAuthorize(_settings.Value.Vkontakte);
+                        _logger.Info($"SimpleAuthorize passed. New vk auth status = {_api.IsAuthorized}");
                     }
                 }
                 catch (Exception ex)

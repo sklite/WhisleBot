@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Net.Http.Headers;
 using Telegram.Bot.Types;
 using WhisleBotConsole.DB;
 using WhisleBotConsole.Models;
@@ -45,5 +46,8 @@ namespace WhisleBotConsole.TelegramBot.MessageHandlers
                 ReplyMarkup = MessageMarkupUtilities.GetDefaultMarkup()
             };
         }
+
+        public override ChatState UsedChatState => ChatState.RemoveSettingsStep1;
+        public override string UsedUserInput => string.Empty;
     }
 }

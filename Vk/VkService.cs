@@ -26,10 +26,10 @@ namespace WhisleBotConsole.Vk
             _logger = LogManager.GetCurrentClassLogger();
         }
 
-        private void SetTimer(int milliseconds)
+        private void SetTimer(int seconds)
         {
             // Create a timer with a two second interval.
-            _timer = new Timer(milliseconds);
+            _timer = new Timer(seconds * 1000);
             // Hook up the Elapsed event for the timer. 
             _timer.Elapsed += OnTimedEvent;
             _timer.AutoReset = true;

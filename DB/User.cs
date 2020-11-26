@@ -19,6 +19,7 @@ namespace WhisleBotConsole.DB
         public long? CurrentGroupId { get; set; }
         public string CurrentGroupName { get; set; }
         public string Keyword { get; set; }
-
+        public UserType SubscriptionStatus { get; set; }
+        public DateTime EndOfAdvancedSubscription { get; set; }
     }
 }

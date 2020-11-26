@@ -39,5 +39,15 @@ namespace WhisleBotConsole.TelegramBot.MessageHandlers
                 ReplyMarkup = MessageMarkupUtilities.GetDefaultMarkup()
             };
         }
+
+        /// <summary>
+        /// A chat state, where this handler will fire (has priority over the UsedUserInput)
+        /// </summary>
+        public abstract ChatState UsedChatState { get; }
+
+        /// <summary>
+        /// The user input, which is needed for handling the message
+        /// </summary>
+        public abstract string UsedUserInput { get; }
     }
 }
