@@ -17,7 +17,6 @@ namespace WhisleBotConsole.TelegramBot.MessageHandlers
         {
             _vk = vk;
         }
-
         public override TelegramUserMessage GetResponseTo(Message inputMessage, User user)
         {
             if (string.IsNullOrEmpty(inputMessage.Text))            
@@ -45,5 +44,8 @@ namespace WhisleBotConsole.TelegramBot.MessageHandlers
                 ReplyMarkup = new ReplyKeyboardRemove()
             };
         }
+
+        public override ChatState UsedChatState => ChatState.NewGroupToAdd;
+        public override string UsedUserInput => string.Empty;
     }
 }

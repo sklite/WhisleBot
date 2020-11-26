@@ -5,7 +5,8 @@ using System.Text;
 namespace WhisleBotConsole.DB
 {
     public enum ChatState
-    {
+    {      
+        NotUsed,
         Standrard,
         NewGroupToAdd,
         NewWordToGroupAdd,

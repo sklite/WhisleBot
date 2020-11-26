@@ -37,5 +37,8 @@ namespace WhisleBotConsole.TelegramBot.MessageHandlers
                 ReplyMarkup = replyMarkup
             };
         }
+
+        public override ChatState UsedChatState => ChatState.NotUsed;
+        public override string UsedUserInput => TgBotText.EditExistingSettings;
     }
 }

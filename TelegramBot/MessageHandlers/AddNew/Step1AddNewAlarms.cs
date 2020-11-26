@@ -21,13 +21,18 @@ namespace WhisleBotConsole.TelegramBot.MessageHandlers
         {
             _settings = settings.Value;
         }
-
         public override TelegramUserMessage GetResponseTo(Message inputMessage, User user)
         {
             var prefs = _db.Preferences.Where(pref => pref.User == user);
-            if (prefs.Count() >= _settings.Vkontakte.BaseSubscriptionsLimit)
+            if (user.SubscriptionStatus == UserType.StandardUser && prefs.Count() >= _settings.Vkontakte.BaseSubscriptionsLimit)
             {
                 return FailWithText(inputMessage.Chat.Id, user, $"На данный момент лимит подписок ограничивается {_settings.Vkontakte.BaseSubscriptionsLimit}" +
+                    $" группами. Для того, чтобы подписаться на новые уведомления групп, отпишитесь от старых.");
+            }
+
+            if (user.SubscriptionStatus == UserType.ExtendedUser && prefs.Count() >= _settings.Vkontakte.ExtendedSubscriptionsLimit)
+            {
+                return FailWithText(inputMessage.Chat.Id, user, $"На данный момент ваш лимит подписок ограничивается {_settings.Vkontakte.ExtendedSubscriptionsLimit}" +
                     $" группами. Для того, чтобы подписаться на новые уведомления групп, отпишитесь от старых.");
             }
 
@@ -41,5 +46,8 @@ namespace WhisleBotConsole.TelegramBot.MessageHandlers
                 ReplyMarkup = new ReplyKeyboardRemove()
             };
         }
+
+        public override ChatState UsedChatState => ChatState.NotUsed;
+        public override string UsedUserInput => TgBotText.AddNewSettings;
     }
 }

@@ -1,11 +1,7 @@
 ﻿using Microsoft.Extensions.Options;
-using NLog;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Telegram.Bot.Types;
-using Telegram.Bot.Types.ReplyMarkups;
 using WhisleBotConsole.Config;
 using WhisleBotConsole.DB;
 using WhisleBotConsole.Models;
@@ -23,6 +19,7 @@ namespace WhisleBotConsole.TelegramBot.MessageHandlers
         {
             _settings = settings.Value;
         }
+
         public override TelegramUserMessage GetResponseTo(Message inputMessage, User user)
         {
             if (string.IsNullOrEmpty(inputMessage.Text))
@@ -74,5 +71,8 @@ namespace WhisleBotConsole.TelegramBot.MessageHandlers
                 ReplyMarkup = MessageMarkupUtilities.GetDefaultMarkup()
             };
         }
+
+        public override ChatState UsedChatState => ChatState.NewWordToGroupAdd;
+        public override string UsedUserInput => string.Empty;
     }
 }

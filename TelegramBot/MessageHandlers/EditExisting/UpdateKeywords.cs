@@ -31,6 +31,7 @@ namespace WhisleBotConsole.TelegramBot.MessageHandlers
 
             user.CurrentGroupId = groupId;
             user.State = ChatState.NewWordToGroupAdd;
+            _db.SaveChanges();
 
             var currentText = _db.Preferences.Where(pref => pref.User.Id == user.Id && pref.GroupId == groupId).FirstOrDefault();
 
@@ -41,5 +42,9 @@ namespace WhisleBotConsole.TelegramBot.MessageHandlers
                 ReplyMarkup = new ReplyKeyboardRemove()
             };
         }
+
+        public override ChatState UsedChatState => ChatState.EditExistingGroup;
+
+        public override string UsedUserInput => string.Empty;
     }
 }

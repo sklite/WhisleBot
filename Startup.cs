@@ -14,6 +14,7 @@ using WhisleBotConsole.Config;
 using WhisleBotConsole.DB;
 using WhisleBotConsole.TelegramBot;
 using WhisleBotConsole.Vk;
+using WhisleBotConsole.Vk.Extensions;
 using WhisleBotConsole.Vk.Posts;
 
 namespace WhisleBotConsole
@@ -68,13 +69,7 @@ namespace WhisleBotConsole
             services.AddSingleton<IVkService, VkService>();
 
             var vkApi = new VkApi();
-            vkApi.Authorize(new VkNet.Model.ApiAuthParams
-            {
-                ApplicationId = vkSettings.AppId,
-                Login = vkSettings.Login,
-                Password = vkSettings.Password,
-                Settings = VkNet.Enums.Filters.Settings.All
-            });
+            vkApi.SimpleAuthorize(vkSettings);
             services.AddSingleton<IVkApi>(vkApi);
 
             services.AddDbContext<UsersContext>();

@@ -9,6 +9,7 @@ using WhisleBotConsole.Config;
 using WhisleBotConsole.DB;
 using WhisleBotConsole.Models;
 using WhisleBotConsole.TelegramBot.MessageHandlers;
+using WhisleBotConsole.TelegramBot.MessageHandlers.AdminCommands;
 using WhisleBotConsole.Vk;
 using User = WhisleBotConsole.DB.User;
 
@@ -18,6 +19,8 @@ namespace WhisleBotConsole.TelegramBot
     {
         Dictionary<ChatState, BaseTgMessageHandler> _messageHandlers;
         Dictionary<string, BaseTgMessageHandler> _commandHandlers;
+        List<BaseTgMessageHandler> _myMessageHandlers;
+
         private readonly UsersContext _db;
         private readonly IMessageSender _messageSender;
         private readonly Logger _logger;
@@ -27,19 +30,32 @@ namespace WhisleBotConsole.TelegramBot
             _db = db;
             _messageSender = messageSender;
             _logger = LogManager.GetCurrentClassLogger();
-            _messageHandlers = new Dictionary<ChatState, BaseTgMessageHandler>
-            {
-                { ChatState.NewGroupToAdd, new Step2InputGroup(_db, vk) },
-                { ChatState.NewWordToGroupAdd, new Step3InputKeyword(_db, settings) },
-                { ChatState.EditExistingGroup, new UpdateKeywords(_db) },
-                { ChatState.RemoveSettingsStep1, new RemoveSettingsStep2(_db) }
-            };
+            //_messageHandlers = new Dictionary<ChatState, BaseTgMessageHandler>
+            //{
+            //    { ChatState.NewGroupToAdd, new Step2InputGroup(_db, vk) },
+            //    { ChatState.NewWordToGroupAdd, new Step3InputKeyword(_db, settings) },
+            //    { ChatState.EditExistingGroup, new UpdateKeywords(_db) },
+            //    { ChatState.RemoveSettingsStep1, new RemoveSettingsStep2(_db) }
+            //};
 
-            _commandHandlers = new Dictionary<string, BaseTgMessageHandler>
+            //_commandHandlers = new Dictionary<string, BaseTgMessageHandler>
+            //{
+            //    { TgBotText.AddNewSettings, new Step1AddNewAlarms(_db, settings) },
+            //    { TgBotText.EditExistingSettings, new EditExistingSettings(_db, vk) },
+            //    { TgBotText.RemoveSubscriptions, new RemoveSettingsStep1(_db, vk) }
+            //};
+
+            _myMessageHandlers = new List<BaseTgMessageHandler>
             {
-                { TgBotText.AddNewSettings, new Step1AddNewAlarms(_db, settings) },
-                { TgBotText.EditExistingSettings, new EditExistingSettings(_db, vk) },
-                { TgBotText.RemoveSubscriptions, new RemoveSettingsStep1(_db, vk) }
+                new Step2InputGroup(_db, vk),
+                new Step3InputKeyword(_db, settings),
+                new UpdateKeywords(_db),
+                new RemoveSettingsStep2(_db),
+                new Step1AddNewAlarms(_db, settings),
+                new EditExistingSettings(_db, vk),
+                new RemoveSettingsStep1(_db, vk),
+                new GetAllUsers(_db, settings),
+                new SetUserStatus(_db, settings)
             };
         }
 
@@ -83,14 +99,14 @@ namespace WhisleBotConsole.TelegramBot
             _logger.Info($"Incoming message from {inputMessage.Chat.Id}. Message content: \"{inputMessage.Text}\"");
             var user = DefineUser(inputMessage.Chat);
 
-            if (_messageHandlers.ContainsKey(user.State))
-                resultMessage = _messageHandlers[user.State].GetResponseTo(inputMessage, user);
+            var userInput = inputMessage.Text.Split("|||", System.StringSplitOptions.RemoveEmptyEntries);
 
-            if (_commandHandlers.ContainsKey(inputMessage.Text))
-                resultMessage = _commandHandlers[inputMessage.Text].GetResponseTo(inputMessage, user);
+            var handler = _myMessageHandlers.FirstOrDefault(han => han.UsedChatState == user.State) 
+                    ?? _myMessageHandlers.FirstOrDefault(han => han.UsedUserInput == userInput.FirstOrDefault());
 
-            if (resultMessage == null)
-                resultMessage = BaseTgMessageHandler.GetDefaultResponse(inputMessage.Chat.Id);
+            resultMessage = handler != null 
+                ? handler.GetResponseTo(inputMessage, user) 
+                : BaseTgMessageHandler.GetDefaultResponse(inputMessage.Chat.Id);
 
             await _messageSender.SendMessageToUser(resultMessage);
         }
