@@ -9,6 +9,7 @@ namespace WhisleBotConsole.Extensions
             var userInfo = $"Id: {user.Id}; " +
                     $"ChatId: {user.ChatId}; " +
                     $"Username: {user.Username}; " +
+                    $"Title: {user.Title}; " +
                     $"Status: {(int)user.SubscriptionStatus}; " +
                     $"Till: {user.EndOfAdvancedSubscription.ToShortDateString()}";
 
