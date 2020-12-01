@@ -1,4 +1,5 @@
 ﻿using BotServer.TelegramBot;
+using Cyriller;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -63,10 +64,11 @@ namespace WhisleBotConsole
             services.AddSingleton<VkGroupsCrawler>();
             services.AddSingleton<ITelegramService, TelegramBotService>();
             services.AddSingleton<ITelegramMessageRouter, TelegramMessageRouter>();
-            services.AddSingleton<IPostKeywordSearcher, StupidKeywordSearcher>();
+            services.AddSingleton<IPostKeywordSearcher, CaseInsensitiveKeywordSearcher>();
             services.AddSingleton<IMessageSender, TelegramMessageSender>();
             services.AddSingleton<IUserNotifier, UserNewMentionsNotifier>();
             services.AddSingleton<IVkService, VkService>();
+            services.AddSingleton<CyrNounCollection, CyrNounCollection>();
 
             var vkApi = new VkApi();
             vkApi.SimpleAuthorize(vkSettings);
