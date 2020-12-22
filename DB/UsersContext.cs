@@ -12,16 +12,16 @@ namespace WhisleBotConsole.DB
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            // Gets the current path (executing assembly)
-            string currentPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            // Your DB filename    
-            string dbFileName = "users.db";
-            // Creates a full path that contains your DB file
-            string absolutePath = Path.Combine(currentPath, dbFileName);
-
+            var absolutePath = GetDbFilePath();
             optionsBuilder.UseSqlite($"Data Source={absolutePath}");
             LogManager.GetCurrentClassLogger().Info($"Database file address: {absolutePath}");
+        }
 
+        public static string GetDbFilePath()
+        {
+            string dbFileName = "users.db";
+            string currentPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            return Path.Combine(currentPath, dbFileName);
         }
     }
 }

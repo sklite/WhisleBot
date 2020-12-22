@@ -30,20 +30,6 @@ namespace WhisleBotConsole.TelegramBot
             _db = db;
             _messageSender = messageSender;
             _logger = LogManager.GetCurrentClassLogger();
-            //_messageHandlers = new Dictionary<ChatState, BaseTgMessageHandler>
-            //{
-            //    { ChatState.NewGroupToAdd, new Step2InputGroup(_db, vk) },
-            //    { ChatState.NewWordToGroupAdd, new Step3InputKeyword(_db, settings) },
-            //    { ChatState.EditExistingGroup, new UpdateKeywords(_db) },
-            //    { ChatState.RemoveSettingsStep1, new RemoveSettingsStep2(_db) }
-            //};
-
-            //_commandHandlers = new Dictionary<string, BaseTgMessageHandler>
-            //{
-            //    { TgBotText.AddNewSettings, new Step1AddNewAlarms(_db, settings) },
-            //    { TgBotText.EditExistingSettings, new EditExistingSettings(_db, vk) },
-            //    { TgBotText.RemoveSubscriptions, new RemoveSettingsStep1(_db, vk) }
-            //};
 
             _myMessageHandlers = new List<BaseTgMessageHandler>
             {
@@ -55,7 +41,8 @@ namespace WhisleBotConsole.TelegramBot
                 new EditExistingSettings(_db, vk),
                 new RemoveSettingsStep1(_db, vk),
                 new GetAllUsers(_db, settings),
-                new SetUserStatus(_db, settings)
+                new SetUserStatus(_db, settings),
+                new DownloadDbFile(_db, settings)
             };
         }
 
