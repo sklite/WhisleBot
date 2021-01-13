@@ -13,6 +13,7 @@ using Microsoft.Extensions.Options;
 using WhisleBotConsole.Config;
 using System.Collections.Generic;
 using VkNet.Enums;
+using WhisleBotConsole.Extensions;
 
 namespace WhisleBotConsole.Vk
 {
@@ -49,25 +50,25 @@ namespace WhisleBotConsole.Vk
             return keywords;
         }
 
-        public (bool Success, long GroupId, string GroupName) GetGroupIdByLink(Uri link)
+        public (bool Success, long Id, string Name, PreferenceType LinkType) GetObjIdIdByLink(Uri link)
         {
             try
             {
                 var groupIdentifier = link.PathAndQuery.Split("/", StringSplitOptions.RemoveEmptyEntries).Last();
                 var vkObj = _api.Utils.ResolveScreenName(groupIdentifier);
                 if (vkObj == null || !_supportedVkTypes.Contains(vkObj.Type))
-                    return (false, -1, string.Empty);
+                    return (false, -1, string.Empty, PreferenceType.WrongLink);
 
                 var groupInfo = _api.Groups.GetById(null, vkObj.Id.Value.ToString(), VkNet.Enums.Filters.GroupsFields.Description);
                 if (groupInfo == null || !groupInfo.Any())
-                    return (false, -1, string.Empty);
+                    return (false, -1, string.Empty, PreferenceType.WrongLink);
 
-                return (true, vkObj.Id.Value, groupInfo.First().Name);
+                return (true, vkObj.Id.Value, groupInfo.First().Name, PreferenceType.VkGroup);
             }
             catch (Exception ex)
             {
                 _logger.Error(ex);
-                return (false, -1, string.Empty);
+                return (false, -1, string.Empty, PreferenceType.WrongLink);
             }
 
         }
@@ -85,7 +86,7 @@ namespace WhisleBotConsole.Vk
                         var wallGeParams = new WallGetParams
                         {
                             Count = 50,
-                            OwnerId = -prefs.GroupId
+                            OwnerId = -prefs.TargetId
                         };
                         Thread.Sleep(1000);
                         var getResult = _api.Wall.Get(wallGeParams);
@@ -118,7 +119,7 @@ namespace WhisleBotConsole.Vk
                 }
                 catch (Exception ex)
                 {
-                    _logger.Error(ex, $"Error while fetching VK groups. {ex}");
+                    _logger.Error(ex, $"Error while fetching VK groups. Pref: {prefs.ToShortString()}. Exception message: {ex}");
                 }
             }
             _usersContext.SaveChanges();
@@ -126,7 +127,7 @@ namespace WhisleBotConsole.Vk
 
         bool ValidForSearch(UserPreference prefs)
         {
-            return (prefs.GroupId > 0
+            return (prefs.TargetId > 0
                 && !string.IsNullOrEmpty(prefs.Keyword));
         }
     }

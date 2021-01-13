@@ -29,11 +29,11 @@ namespace WhisleBotConsole.TelegramBot.MessageHandlers
             if (!long.TryParse(idStr, out long groupId))
                 return FailWithText(inputMessage.Chat.Id, user, "Не удалось получить id группы");
 
-            user.CurrentGroupId = groupId;
+            user.CurrentTargetId = groupId;
             user.State = ChatState.NewWordToGroupAdd;
             _db.SaveChanges();
 
-            var currentText = _db.Preferences.Where(pref => pref.User.Id == user.Id && pref.GroupId == groupId).FirstOrDefault();
+            var currentText = _db.Preferences.Where(pref => pref.User.Id == user.Id && pref.TargetId == groupId).FirstOrDefault();
 
             return new TelegramUserMessage()
             {

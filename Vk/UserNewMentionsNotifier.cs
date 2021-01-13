@@ -37,7 +37,7 @@ namespace WhisleBotConsole.Vk
             var message = new TelegramUserMessage()
             {
                 ChatId = user.ChatId,
-                Text = $"В группе *{preference.GroupName}* (id:{preference.GroupId}) В [посте](https://vk.com/wall-{preference.GroupId}_{postId}/) упоминается слово _{keyword}_. "
+                Text = $"В группе *{preference.TargetName}* (id:{preference.TargetId}) В [посте](https://vk.com/wall-{preference.TargetId}_{postId}/) упоминается слово _{keyword}_. "
             };
                         
             _messageSender.SendMessageToUser(message);

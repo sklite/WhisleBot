@@ -32,22 +32,22 @@ namespace WhisleBotConsole.TelegramBot.MessageHandlers
                 return FailWithText(inputMessage.Chat.Id, user, $"Введён слишком длинный текст. Текущий лимит {_settings.Vkontakte.KeywordCharacterLimit} символов.");
             }
 
-            if (user.CurrentGroupId == null)
+            if (user.CurrentTargetId == null)
             {
-                user.CurrentGroupId = null;
-                user.CurrentGroupName = null;
+                user.CurrentTargetId = null;
+                user.CurrentTargetName = null;
                 return FailWithText(inputMessage.Chat.Id, user, @"Что-то пошло не так\. Попробуйте ещё раз или позже");
             }
 
-            var userPrefs = _db.Preferences.Where(pref => pref.User.Id == user.Id && pref.GroupId == user.CurrentGroupId).FirstOrDefault();
+            var userPrefs = _db.Preferences.Where(pref => pref.User.Id == user.Id && pref.TargetId == user.CurrentTargetId).FirstOrDefault();
 
             if (userPrefs == null)
             {
                 userPrefs = new UserPreference()
                 {
                     User = user,
-                    GroupId = user.CurrentGroupId.Value,
-                    GroupName = user.CurrentGroupName,
+                    TargetId = user.CurrentTargetId.Value,
+                    TargetName = user.CurrentTargetName,
                     Keyword = inputMessage.Text,
                     LastNotifiedPostTime = DateTime.MinValue
                 };
@@ -58,8 +58,8 @@ namespace WhisleBotConsole.TelegramBot.MessageHandlers
                 userPrefs.Keyword = inputMessage.Text;
             }
 
-            user.CurrentGroupId = null;
-            user.CurrentGroupName = null;
+            user.CurrentTargetId = null;
+            user.CurrentTargetName = null;
             user.State = ChatState.Standrard;
 
             _db.SaveChanges();
@@ -67,7 +67,7 @@ namespace WhisleBotConsole.TelegramBot.MessageHandlers
             return new TelegramUserMessage()
             {
                 ChatId = inputMessage.Chat.Id,
-                Text = @$"Отлично. Слова записаны. Когда в группе *{userPrefs.GroupName}* (id:_{userPrefs.GroupId}_) появятся новые посты со следюующими словами: _{inputMessage.Text}_ Вы получите уведомление сюда",
+                Text = @$"Отлично. Слова записаны. Когда в группе *{userPrefs.TargetName}* (id:_{userPrefs.TargetId}_) появятся новые посты со следюующими словами: _{inputMessage.Text}_ Вы получите уведомление сюда",
                 ReplyMarkup = MessageMarkupUtilities.GetDefaultMarkup()
             };
         }

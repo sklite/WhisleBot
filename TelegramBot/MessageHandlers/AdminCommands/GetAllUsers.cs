@@ -26,7 +26,7 @@ namespace WhisleBotConsole.TelegramBot.MessageHandlers.AdminCommands
             var sb = new StringBuilder();
             foreach (var dbUser in _db.Users)
             {
-                sb.AppendLine(dbUser.ToChatString());
+                sb.AppendLine(FormatExtensions.ToShortString(dbUser));
             }
 
             return new TelegramUserMessage()
