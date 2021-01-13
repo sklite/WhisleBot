@@ -6,38 +6,38 @@ namespace WhisleBotConsole.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            //migrationBuilder.RenameColumn(
-            //    name: "CurrentGroupId",
-            //    table: "Users",
-            //    newName: "CurrentTargetId");
+            migrationBuilder.RenameColumn(
+                name: "CurrentGroupId",
+                table: "Users",
+                newName: "CurrentTargetId");
 
-            //migrationBuilder.RenameColumn(
-            //    name: "CurrentGroupName",
-            //    table: "Users",
-            //    newName: "CurrentTargetName");
+            migrationBuilder.RenameColumn(
+                name: "CurrentGroupName",
+                table: "Users",
+                newName: "CurrentTargetName");
 
-            //migrationBuilder.RenameColumn(
-            //    name: "GroupId",
-            //    table: "Preferences",
-            //    newName: "TargetId"
-            //    );
+            migrationBuilder.RenameColumn(
+                name: "GroupId",
+                table: "Preferences",
+                newName: "TargetId"
+                );
 
-            //migrationBuilder.RenameColumn(
-            //    name: "GroupName",
-            //    table: "Preferences",
-            //    newName: "TargetName");
+            migrationBuilder.RenameColumn(
+                name: "GroupName",
+                table: "Preferences",
+                newName: "TargetName");
 
-            //migrationBuilder.AddColumn<int>(
-            //    name: "CurrentTargetType",
-            //    table: "Users",
-            //    nullable: false,
-            //    defaultValue: 0);
+            migrationBuilder.AddColumn<int>(
+                name: "CurrentTargetType",
+                table: "Users",
+                nullable: false,
+                defaultValue: 0);
 
-            //migrationBuilder.AddColumn<int>(
-            //    name: "TargetType",
-            //    table: "Preferences",
-            //    nullable: false,
-            //    defaultValue: 0);
+            migrationBuilder.AddColumn<int>(
+                name: "TargetType",
+                table: "Preferences",
+                nullable: false,
+                defaultValue: 0);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

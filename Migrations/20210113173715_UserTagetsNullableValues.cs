@@ -6,12 +6,12 @@ namespace WhisleBotConsole.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            //migrationBuilder.AlterColumn<int>(
-            //    name: "CurrentTargetType",
-            //    table: "Users",
-            //    nullable: true,
-            //    oldClrType: typeof(int),
-            //    oldType: "INTEGER");
+            migrationBuilder.AlterColumn<int>(
+                name: "CurrentTargetType",
+                table: "Users",
+                nullable: true,
+                oldClrType: typeof(int),
+                oldType: "INTEGER");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

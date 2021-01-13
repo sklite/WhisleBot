@@ -45,11 +45,16 @@ namespace WhisleBotConsole
 
             var config = new ConfigurationBuilder()
                .SetBasePath(System.IO.Directory.GetCurrentDirectory())
-               .AddJsonFile($"appsettings.json", true, true)
+               .AddJsonFile($"appsettings.json", true, true);
+              //.Build();
+
+            var configBuilt = new ConfigurationBuilder()
+               .SetBasePath(System.IO.Directory.GetCurrentDirectory())
+               .AddJsonFile($"appsettings.json", false, true)
               .Build();
 
-            var tgSettings = config.GetSection("TelegramSettings").Get<TelegramSettings>();
-            var vkSettings = config.GetSection("VkSettings").Get<VkSettings>();
+            var tgSettings = configBuilt.GetSection("TelegramSettings").Get<TelegramSettings>(); // as TelegramSettings;//.Get<TelegramSettings>();
+            var vkSettings = configBuilt.GetSection("VkSettings").Get<VkSettings>();
 
             services.Configure<Settings>(settings =>
             {
