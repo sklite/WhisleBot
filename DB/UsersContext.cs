@@ -12,9 +12,10 @@ namespace WhisleBotConsole.DB
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            var absolutePath = GetDbFilePath();
-            optionsBuilder.UseSqlite($"Data Source={absolutePath}");
-            LogManager.GetCurrentClassLogger().Info($"Database file address: {absolutePath}");
+            _ = optionsBuilder.UseNpgsql("Host=localhost;Database=znauDb;Username=ZnauUser;Password=heroes");
+            //var absolutePath = GetDbFilePath();
+            //optionsBuilder.UseSqlite($"Data Source={absolutePath}");
+            //LogManager.GetCurrentClassLogger().Info($"Database file address: {absolutePath}");
         }
 
         public static string GetDbFilePath()
