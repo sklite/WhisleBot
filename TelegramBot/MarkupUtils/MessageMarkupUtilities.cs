@@ -11,7 +11,7 @@ namespace WhisleBotConsole.TelegramBot.MarkupUtils
     {
         public static List<List<KeyboardButton>> GetReplyKeyboardForGroups(IEnumerable<UserPreference> groups)
         {
-            var buttons = groups.Select(pref => new KeyboardButton[] { $"{pref.GroupName} (id: {pref.GroupId})" });
+            var buttons = groups.Select(pref => new KeyboardButton[] { $"{pref.TargetName} (id: {pref.TargetId})" });
             var keyboard = new List<List<KeyboardButton>>();
             foreach (var button in buttons)
             {

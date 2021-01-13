@@ -53,7 +53,7 @@ namespace WhisleBotConsole.TelegramBot.MessageHandlers.AdminCommands
             return new TelegramUserMessage()
             {
                 ChatId = inputMessage.Chat.Id,
-                Text = $"New user info: {neededUser.ToChatString()}",
+                Text = $"New user info: {neededUser.ToShortString()}",
                 ReplyMarkup = MessageMarkupUtilities.GetDefaultMarkup()
             };
         }

@@ -30,12 +30,12 @@ namespace WhisleBotConsole.TelegramBot.MessageHandlers
             if (!long.TryParse(idStr, out long groupId))
                 return FailWithText(inputMessage.Chat.Id, user, "Не удалось получить id группы");
 
-            var groupsToRemove = _db.Preferences.Where(pref => pref.User.Id == user.Id && pref.GroupId == groupId);
+            var groupsToRemove = _db.Preferences.Where(pref => pref.User.Id == user.Id && pref.TargetId == groupId);
             if (groupsToRemove == null || !groupsToRemove.Any())
             {
                 return FailWithText(inputMessage.Chat.Id, user, $"Группа с указанным id:{groupId} не найдена в подписках");
             }
-            var groupName = groupsToRemove.First().GroupName;
+            var groupName = groupsToRemove.First().TargetName;
             _db.Preferences.RemoveRange(groupsToRemove);
             user.State = ChatState.Standrard;
             _db.SaveChanges();

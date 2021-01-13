@@ -2,15 +2,17 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WhisleBotConsole.DB;
 
 namespace WhisleBotConsole.Migrations
 {
     [DbContext(typeof(UsersContext))]
-    partial class UsersContextModelSnapshot : ModelSnapshot
+    [Migration("20210113173441_UserTagets")]
+    partial class UserTagets
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -31,7 +33,7 @@ namespace WhisleBotConsole.Migrations
                     b.Property<string>("CurrentTargetName")
                         .HasColumnType("TEXT");
 
-                    b.Property<int?>("CurrentTargetType")
+                    b.Property<int>("CurrentTargetType")
                         .HasColumnType("INTEGER");
 
                     b.Property<DateTime>("EndOfAdvancedSubscription")

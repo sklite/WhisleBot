@@ -1,10 +1,11 @@
-﻿using WhisleBotConsole.DB;
+﻿using System;
+using WhisleBotConsole.DB;
 
 namespace WhisleBotConsole.Extensions
 {
     static class FormatExtensions
     {
-        public static string ToChatString(this User user)
+        public static string ToShortString(this User user)
         {
             var userInfo = $"Id: {user.Id}; " +
                     $"ChatId: {user.ChatId}; " +
@@ -14,6 +15,15 @@ namespace WhisleBotConsole.Extensions
                     $"Till: {user.EndOfAdvancedSubscription.ToShortDateString()}";
 
             return userInfo;
+        }
+
+        public static string ToShortString(this UserPreference pref)
+        {
+            return $"{nameof(pref.Id)}: {pref.Id};" + Environment.NewLine +
+                $"{nameof(pref.Keyword)}: {pref.Keyword};" + Environment.NewLine +
+                $"{nameof(pref.TargetId)}: {pref.TargetId};" + Environment.NewLine +
+                $"{nameof(pref.LastNotifiedPostTime)}: {pref.LastNotifiedPostTime};" + Environment.NewLine +
+                $"{nameof(pref.User)}: {(pref.User == null ? string.Empty : pref.User.Id.ToString())};" + Environment.NewLine;
         }
     }
 

@@ -28,12 +28,12 @@ namespace WhisleBotConsole.TelegramBot.MessageHandlers
                 return FailWithText(inputMessage.Chat.Id, user, "Введён некорректный URL");
 
             
-            var getGroupIdResult = _vk.GetGroupIdByLink(uriResult);
+            var getGroupIdResult = _vk.GetObjIdIdByLink(uriResult);
             if (!getGroupIdResult.Success)
                 return FailWithText(inputMessage.Chat.Id, user, "Не удалось получть id группы");
 
-            user.CurrentGroupId = getGroupIdResult.GroupId;
-            user.CurrentGroupName = getGroupIdResult.GroupName;
+            user.CurrentTargetId = getGroupIdResult.Id;
+            user.CurrentTargetName = getGroupIdResult.Name;
             user.State = ChatState.NewWordToGroupAdd;
             _db.SaveChanges();
 
