@@ -18,6 +18,18 @@ namespace WhisleBotConsole.DB
             //LogManager.GetCurrentClassLogger().Info($"Database file address: {absolutePath}");
         }
 
+        //protected override void OnModelCreating(System.Data.Entity.DbModelBuilder modelBuilder)
+        //{
+        //    modelBuilder.HasDefaultSchema("public");
+        //    base.OnModelCreating(modelBuilder);
+        //}
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.HasDefaultSchema("public");
+            base.OnModelCreating(modelBuilder);
+        }
+
         public static string GetDbFilePath()
         {
             string dbFileName = "users.db";

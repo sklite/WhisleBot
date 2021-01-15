@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "WhisleBotConsole": {
+      "commandName": "Project",
+      "commandLineArgs": "-s development"
+    }
+  }
+}

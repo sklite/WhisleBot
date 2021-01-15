@@ -4,52 +4,60 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using WhisleBotConsole.DB;
 
 namespace WhisleBotConsole.Migrations
 {
     [DbContext(typeof(UsersContext))]
-    [Migration("20201126131618_SubscriptionSettings")]
-    partial class SubscriptionSettings
+    [Migration("20210115153004_postgreMig2")]
+    partial class postgreMig2
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "3.1.7");
+                .HasDefaultSchema("public")
+                .UseIdentityByDefaultColumns()
+                .HasAnnotation("Relational:MaxIdentifierLength", 63)
+                .HasAnnotation("ProductVersion", "5.0.2");
 
             modelBuilder.Entity("WhisleBotConsole.DB.User", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer")
+                        .UseIdentityByDefaultColumn();
 
                     b.Property<long>("ChatId")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("bigint");
 
-                    b.Property<long?>("CurrentGroupId")
-                        .HasColumnType("INTEGER");
+                    b.Property<long?>("CurrentTargetId")
+                        .HasColumnType("bigint");
 
-                    b.Property<string>("CurrentGroupName")
-                        .HasColumnType("TEXT");
+                    b.Property<string>("CurrentTargetName")
+                        .HasColumnType("text");
+
+                    b.Property<int?>("CurrentTargetType")
+                        .HasColumnType("integer");
 
                     b.Property<DateTime>("EndOfAdvancedSubscription")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("Keyword")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.Property<int>("State")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer");
 
                     b.Property<int>("SubscriptionStatus")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer");
 
                     b.Property<string>("Title")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.Property<string>("Username")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
@@ -60,22 +68,26 @@ namespace WhisleBotConsole.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<long>("GroupId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("GroupName")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("integer")
+                        .UseIdentityByDefaultColumn();
 
                     b.Property<string>("Keyword")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.Property<DateTime>("LastNotifiedPostTime")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<long>("TargetId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("TargetName")
+                        .HasColumnType("text");
+
+                    b.Property<int>("TargetType")
+                        .HasColumnType("integer");
 
                     b.Property<int?>("UserId")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer");
 
                     b.HasKey("Id");
 
@@ -89,6 +101,8 @@ namespace WhisleBotConsole.Migrations
                     b.HasOne("WhisleBotConsole.DB.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId");
+
+                    b.Navigation("User");
                 });
 #pragma warning restore 612, 618
         }
