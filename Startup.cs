@@ -30,7 +30,7 @@ namespace WhisleBotConsole
             var services = new ServiceCollection();
 
             Configure();
-            ConfigureServices(services);
+            ConfigureServices(services, arguments.SettingsFile);
 
             ServiceProvider = services.BuildServiceProvider();
 
@@ -38,23 +38,19 @@ namespace WhisleBotConsole
             context.Database.Migrate();
         }
 
-        private void ConfigureServices(IServiceCollection services)
+        private void ConfigureServices(IServiceCollection services, string settingsFileSuffix)
         {
             Console.OutputEncoding = Encoding.UTF8;
 
+            var settingsFile = string.IsNullOrEmpty(settingsFileSuffix) ? "appsettings.json" : $"appsettings.{settingsFileSuffix}.json";
 
             var config = new ConfigurationBuilder()
                .SetBasePath(System.IO.Directory.GetCurrentDirectory())
-               .AddJsonFile($"appsettings.json", true, true);
-              //.Build();
+               .AddJsonFile(settingsFile, true, true)
+               .Build();
 
-            var configBuilt = new ConfigurationBuilder()
-               .SetBasePath(System.IO.Directory.GetCurrentDirectory())
-               .AddJsonFile($"appsettings.json", false, true)
-              .Build();
-
-            var tgSettings = configBuilt.GetSection("TelegramSettings").Get<TelegramSettings>(); // as TelegramSettings;//.Get<TelegramSettings>();
-            var vkSettings = configBuilt.GetSection("VkSettings").Get<VkSettings>();
+            var tgSettings = config.GetSection("TelegramSettings").Get<TelegramSettings>(); // as TelegramSettings;//.Get<TelegramSettings>();
+            var vkSettings = config.GetSection("VkSettings").Get<VkSettings>();
 
             services.Configure<Settings>(settings =>
             {
