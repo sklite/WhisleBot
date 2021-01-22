@@ -14,7 +14,7 @@ namespace WhisleBotConsole
             var logger = LogManager.GetCurrentClassLogger();
             AppDomain.CurrentDomain.ProcessExit += CurrentDomain_ProcessExit;
             try
-            {
+            { 
                 var arguments = GetArguments(args);
                 var startup = new Startup(arguments);
 

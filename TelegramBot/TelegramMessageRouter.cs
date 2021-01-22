@@ -17,9 +17,7 @@ namespace WhisleBotConsole.TelegramBot
 {
     class TelegramMessageRouter : ITelegramMessageRouter
     {
-        Dictionary<ChatState, BaseTgMessageHandler> _messageHandlers;
-        Dictionary<string, BaseTgMessageHandler> _commandHandlers;
-        List<BaseTgMessageHandler> _myMessageHandlers;
+        private readonly List<BaseTgMessageHandler> _myMessageHandlers;
 
         private readonly UsersContext _db;
         private readonly IMessageSender _messageSender;
@@ -88,8 +86,8 @@ namespace WhisleBotConsole.TelegramBot
 
             var userInput = inputMessage.Text.Split("|||", System.StringSplitOptions.RemoveEmptyEntries);
 
-            var handler = _myMessageHandlers.FirstOrDefault(han => han.UsedChatState == user.State) 
-                    ?? _myMessageHandlers.FirstOrDefault(han => han.UsedUserInput == userInput.FirstOrDefault());
+            var handler = _myMessageHandlers.FirstOrDefault(han => han.UsedUserInput == userInput.FirstOrDefault()) ??
+                _myMessageHandlers.FirstOrDefault(han => han.UsedChatState == user.State);
 
             resultMessage = handler != null 
                 ? handler.GetResponseTo(inputMessage, user) 

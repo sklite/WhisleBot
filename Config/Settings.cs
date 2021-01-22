@@ -10,5 +10,6 @@ namespace WhisleBotConsole.Config
     {
         public TelegramSettings Telegram { get; set; }
         public VkSettings Vkontakte { get; set; }
+        public DbSettings DbSettings { get; set; }
     }
 }

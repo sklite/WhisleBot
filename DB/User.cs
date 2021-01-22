@@ -15,7 +15,8 @@ namespace WhisleBotConsole.DB
         public long ChatId { get; set; }
         public string Username { get; set; }
         public string Title { get; set; }
-        public ChatState State { get; set; }
+        public ChatState State { get; 
+            set; }
         public long? CurrentTargetId { get; set; }
         public string? CurrentTargetName { get; set; }
         public PreferenceType? CurrentTargetType { get; set; }

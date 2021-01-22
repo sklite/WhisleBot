@@ -4,7 +4,7 @@ namespace WhisleBotConsole
 {
     class Arguments
     {
-        [Option('s', "settings", Required = false, Default = "Development", HelpText = "Settings file name")]
+        [Option('s', "settings", Required = false, Default = "", HelpText = "Settings file name")]
         public string SettingsFile { get; set; }
 
         //[Option('s', "skipAssetsCount", Required = false, Default = 0, HelpText = "The number of assets to skip")]

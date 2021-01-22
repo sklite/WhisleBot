@@ -14,6 +14,7 @@ using WhisleBotConsole.Config;
 using System.Collections.Generic;
 using VkNet.Enums;
 using WhisleBotConsole.Extensions;
+using VkNet.Model;
 
 namespace WhisleBotConsole.Vk
 {
@@ -54,16 +55,30 @@ namespace WhisleBotConsole.Vk
         {
             try
             {
-                var groupIdentifier = link.PathAndQuery.Split("/", StringSplitOptions.RemoveEmptyEntries).Last();
+                var groupIdentifier = link.LocalPath.Split("/", StringSplitOptions.RemoveEmptyEntries).Last();
                 var vkObj = _api.Utils.ResolveScreenName(groupIdentifier);
                 if (vkObj == null || !_supportedVkTypes.Contains(vkObj.Type))
                     return (false, -1, string.Empty, PreferenceType.WrongLink);
 
-                var groupInfo = _api.Groups.GetById(null, vkObj.Id.Value.ToString(), VkNet.Enums.Filters.GroupsFields.Description);
-                if (groupInfo == null || !groupInfo.Any())
-                    return (false, -1, string.Empty, PreferenceType.WrongLink);
+                switch (vkObj.Type)
+                {
+                    case VkObjectType.Group:
+                        var groupInfo = _api.Groups.GetById(null, vkObj.Id.Value.ToString(), VkNet.Enums.Filters.GroupsFields.Description);
+                        if (groupInfo == null || !groupInfo.Any())
+                            return (false, -1, string.Empty, PreferenceType.WrongLink);
 
-                return (true, vkObj.Id.Value, groupInfo.First().Name, PreferenceType.VkGroup);
+                        return (true, vkObj.Id.Value, groupInfo.First().Name, PreferenceType.VkGroup);
+
+                    case VkObjectType.User:
+                        var userInfo = _api.Users.Get(new List<long> { vkObj.Id.Value }, VkNet.Enums.Filters.ProfileFields.FirstName | VkNet.Enums.Filters.ProfileFields.LastName);
+                        if (userInfo == null || !userInfo.Any())
+                            return (false, -1, string.Empty, PreferenceType.WrongLink);
+
+                        return (true, vkObj.Id.Value, $"{userInfo.First().FirstName} {userInfo.First().LastName}", PreferenceType.VkUser);
+
+                    default:
+                        return (false, -1, string.Empty, PreferenceType.WrongLink);
+                }
             }
             catch (Exception ex)
             {
@@ -86,7 +101,7 @@ namespace WhisleBotConsole.Vk
                         var wallGeParams = new WallGetParams
                         {
                             Count = 50,
-                            OwnerId = -prefs.TargetId
+                            OwnerId = prefs.TargetType == PreferenceType.VkGroup ? -prefs.TargetId : prefs.TargetId
                         };
                         Thread.Sleep(1000);
                         var getResult = _api.Wall.Get(wallGeParams);
