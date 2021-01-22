@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.ReplyMarkups;
+using VkNet.Exception;
 using WhisleBotConsole.DB;
 using WhisleBotConsole.Models;
 using WhisleBotConsole.Vk;
@@ -11,11 +13,17 @@ namespace WhisleBotConsole.TelegramBot.MessageHandlers
     class Step2InputGroup : BaseTgMessageHandler
     {
         private readonly IVkGroupsCrawler _vk;
+        private Dictionary<PreferenceType, string> _resultText;
+
 
         public Step2InputGroup(UsersContext db, IVkGroupsCrawler vk)
             : base(db)
         {
             _vk = vk;
+            _resultText = new Dictionary<PreferenceType, string> {
+                { PreferenceType.VkGroup, "в этой группе" },
+                { PreferenceType.VkUser, "на стене пользователя" }
+            };
         }
         public override TelegramUserMessage GetResponseTo(Message inputMessage, User user)
         {
@@ -34,13 +42,16 @@ namespace WhisleBotConsole.TelegramBot.MessageHandlers
 
             user.CurrentTargetId = getGroupIdResult.Id;
             user.CurrentTargetName = getGroupIdResult.Name;
+            user.CurrentTargetType = getGroupIdResult.LinkType;
             user.State = ChatState.NewWordToGroupAdd;
             _db.SaveChanges();
+
+            var messageText = $"Введите слова или фразы через запятую, какие следует искать {_resultText[getGroupIdResult.LinkType]}. Например _однушка, перекопка, торты, аквариум, аренда_.";
 
             return new TelegramUserMessage()
             {
                 ChatId = inputMessage.Chat.Id,
-                Text = @"Введите слова или фразы через запятую, какие следует искать в этой группе. Например _однушка, однушку, перекопка, торты, аренда_",
+                Text = messageText,
                 ReplyMarkup = new ReplyKeyboardRemove()
             };
         }

@@ -34,10 +34,14 @@ namespace WhisleBotConsole.Vk
                 return;
             }
 
+            var messageText = preference.TargetType == PreferenceType.VkGroup
+               ? $"В группе *{preference.TargetName}* (id:{preference.TargetId}) В [посте](https://vk.com/wall-{preference.TargetId}_{postId}/) упоминается _{keyword}_. "
+               : $"На стене пользователя *{preference.TargetName}* (id:{preference.TargetId}) В [посте](https://vk.com/wall{preference.TargetId}_{postId}/) упоминается _{keyword}_. ";
+
             var message = new TelegramUserMessage()
             {
                 ChatId = user.ChatId,
-                Text = $"В группе *{preference.TargetName}* (id:{preference.TargetId}) В [посте](https://vk.com/wall-{preference.TargetId}_{postId}/) упоминается слово _{keyword}_. "
+                Text = messageText
             };
                         
             _messageSender.SendMessageToUser(message);

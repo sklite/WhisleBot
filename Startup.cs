@@ -51,11 +51,13 @@ namespace WhisleBotConsole
 
             var tgSettings = config.GetSection("TelegramSettings").Get<TelegramSettings>(); // as TelegramSettings;//.Get<TelegramSettings>();
             var vkSettings = config.GetSection("VkSettings").Get<VkSettings>();
+            var dbSettings = config.GetSection("DbSettings").Get<DbSettings>();
 
             services.Configure<Settings>(settings =>
             {
                 settings.Telegram = tgSettings;
                 settings.Vkontakte = vkSettings;
+                settings.DbSettings = dbSettings;
             });
 
 
@@ -76,12 +78,14 @@ namespace WhisleBotConsole
             vkApi.SimpleAuthorize(vkSettings);
             services.AddSingleton<IVkApi>(vkApi);
 
-            services.AddDbContext<UsersContext>();
+            services.AddDbContext<UsersContext>(options => 
+                options.UseNpgsql(dbSettings.ConnectionString),
+                ServiceLifetime.Transient);
             services.AddLogging(loggingBuilder =>
             {
                 // configure Logging with NLog
                 loggingBuilder.ClearProviders();
-                loggingBuilder.SetMinimumLevel(LogLevel.Trace);
+                loggingBuilder.SetMinimumLevel(LogLevel.Warning);
                 loggingBuilder.AddNLog();
             });
         }

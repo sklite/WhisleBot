@@ -10,9 +10,15 @@ namespace WhisleBotConsole.DB
         public DbSet<User> Users { get; set; }
         public DbSet<UserPreference> Preferences { get; set; }
 
+        public UsersContext(DbContextOptions<UsersContext> options)
+            :base(options)
+        {
+
+        }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            _ = optionsBuilder.UseNpgsql("Host=localhost;Database=znauDb;Username=ZnauUser;Password=heroes");
+           // _ = optionsBuilder.UseNpgsql("Host=localhost;Database=znauDb;Username=ZnauUser;Password=heroes");
             //var absolutePath = GetDbFilePath();
             //optionsBuilder.UseSqlite($"Data Source={absolutePath}");
             //LogManager.GetCurrentClassLogger().Info($"Database file address: {absolutePath}");

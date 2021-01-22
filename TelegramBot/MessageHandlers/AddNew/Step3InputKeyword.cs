@@ -60,6 +60,7 @@ namespace WhisleBotConsole.TelegramBot.MessageHandlers
 
             user.CurrentTargetId = null;
             user.CurrentTargetName = null;
+            user.CurrentTargetType = null;
             user.State = ChatState.Standrard;
 
             _db.SaveChanges();
