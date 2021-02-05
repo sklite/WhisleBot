@@ -49,7 +49,8 @@ namespace WhisleBotConsole.TelegramBot.MessageHandlers
                     TargetId = user.CurrentTargetId.Value,
                     TargetName = user.CurrentTargetName,
                     Keyword = inputMessage.Text,
-                    LastNotifiedPostTime = DateTime.MinValue
+                    LastNotifiedPostTime = DateTime.MinValue,
+                    TargetType = user.CurrentTargetType.Value
                 };
                 _db.Preferences.Add(userPrefs);
             }
