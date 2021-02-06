@@ -15,6 +15,7 @@ using System.Collections.Generic;
 using VkNet.Enums;
 using WhisleBotConsole.Extensions;
 using VkNet.Model;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace WhisleBotConsole.Vk
 {
@@ -23,12 +24,13 @@ namespace WhisleBotConsole.Vk
         private readonly IVkApi _api;
         private readonly IOptions<Settings> _settings;
         private readonly Logger _logger;
-        private readonly UsersContext _usersContext;
+        private readonly IServiceProvider _serviceProvider;
         private readonly IPostKeywordSearcher _keywordSearcher;
         private readonly IUserNotifier _userNotifier;
         private readonly List<VkObjectType> _supportedVkTypes;
 
-        public VkGroupsCrawler(UsersContext usersContect,
+        public VkGroupsCrawler(
+            IServiceProvider serviceProvider,
             IPostKeywordSearcher keywordSearcher,
             IUserNotifier userNotifier,
             IVkApi vkApi,
@@ -37,7 +39,7 @@ namespace WhisleBotConsole.Vk
             _api = vkApi;
             _settings = settings;
             _logger = LogManager.GetCurrentClassLogger();
-            _usersContext = usersContect;
+            _serviceProvider = serviceProvider;
             _keywordSearcher = keywordSearcher;
             _userNotifier = userNotifier;
             _supportedVkTypes = new List<VkObjectType> { VkObjectType.Group, VkObjectType.User };
@@ -90,54 +92,57 @@ namespace WhisleBotConsole.Vk
 
         public void DoSearch()
         {
-            var allPrefs = _usersContext.Preferences.Include(u => u.User);
-            foreach (var prefs in allPrefs)
+            using (var _usersContext = _serviceProvider.GetRequiredService<UsersContext>())
             {
-                try
+                var allPrefs = _usersContext.Preferences.Include(u => u.User);
+                foreach (var prefs in allPrefs)
                 {
-                    if (ValidForSearch(prefs))
+                    try
                     {
-                        var keywords = PrepareKeywords(prefs.Keyword);
-                        var wallGeParams = new WallGetParams
+                        if (ValidForSearch(prefs))
                         {
-                            Count = 50,
-                            OwnerId = prefs.TargetType == PreferenceType.VkGroup ? -prefs.TargetId : prefs.TargetId
-                        };
-                        Thread.Sleep(1000);
-                        var getResult = _api.Wall.Get(wallGeParams);
-                        var posts = getResult.WallPosts;
+                            var keywords = PrepareKeywords(prefs.Keyword);
+                            var wallGeParams = new WallGetParams
+                            {
+                                Count = 50,
+                                OwnerId = prefs.TargetType == PreferenceType.VkGroup ? -prefs.TargetId : prefs.TargetId
+                            };
+                            Thread.Sleep(1000);
+                            var getResult = _api.Wall.Get(wallGeParams);
+                            var posts = getResult.WallPosts;
 
-                        foreach (var post in posts.Reverse())
-                        {
-                            var searchResult = _keywordSearcher.LookIntoPost(post, keywords);
-                            if (!searchResult.Contains)
-                                continue;
+                            foreach (var post in posts.Reverse())
+                            {
+                                var searchResult = _keywordSearcher.LookIntoPost(post, keywords);
+                                if (!searchResult.Contains)
+                                    continue;
 
-                            if (post.Date <= prefs.LastNotifiedPostTime)
-                                continue;
+                                if (post.Date <= prefs.LastNotifiedPostTime)
+                                    continue;
 
-                            prefs.LastNotifiedPostTime = post.Date ?? DateTime.Now;
-                            _userNotifier.NotifyUser(prefs, post.Id.Value, searchResult.Word);
+                                prefs.LastNotifiedPostTime = post.Date ?? DateTime.Now;
+                                _userNotifier.NotifyUser(prefs, post.Id.Value, searchResult.Word);
+                            }
+
                         }
-
                     }
-                }
-                catch(UserAuthorizationFailException ex)
-                {
-                    _logger.Error($"UserAuthorizationException. {ex}");
-                    //if (!_api.IsAuthorized)
+                    catch (UserAuthorizationFailException ex)
                     {
-                        _logger.Info($"VkApi wasn't authorized. Authorizing..");
-                        _api.SimpleAuthorize(_settings.Value.Vkontakte);
-                        _logger.Info($"SimpleAuthorize passed. New vk auth status = {_api.IsAuthorized}");
+                        _logger.Error($"UserAuthorizationException. {ex}");
+                        //if (!_api.IsAuthorized)
+                        {
+                            _logger.Info($"VkApi wasn't authorized. Authorizing..");
+                            _api.SimpleAuthorize(_settings.Value.Vkontakte);
+                            _logger.Info($"SimpleAuthorize passed. New vk auth status = {_api.IsAuthorized}");
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.Error(ex, $"Error while fetching VK groups. Pref: {prefs.ToShortString()}. Exception message: {ex}");
                     }
                 }
-                catch (Exception ex)
-                {
-                    _logger.Error(ex, $"Error while fetching VK groups. Pref: {prefs.ToShortString()}. Exception message: {ex}");
-                }
+                _usersContext.SaveChanges();
             }
-            _usersContext.SaveChanges();
         }
 
         bool ValidForSearch(UserPreference prefs)
