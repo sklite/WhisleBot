@@ -13,6 +13,16 @@ namespace Wbcl.DAL.Context
         public DbSet<UserPreference> Preferences { get; set; }
         public DbSet<ChatHistoryItem> ChatHistory { get; set; }
 
+        public void Migrate()
+        {
+            this.Database.Migrate();
+        }
+
+        //public void Migrate()
+        //{
+        //    this.Migrate();
+        //}
+
         //public UsersContext(DbContextOptions<UsersContext> options)
         //    : base(options)
         //{

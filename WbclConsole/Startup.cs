@@ -7,6 +7,7 @@ using System.Text;
 using Wbcl.Clients.ClientsService;
 using Wbcl.Core.Models.Settings;
 using Wbcl.DAL;
+using Wbcl.DAL.Context;
 using Wbcl.Monitors.MonitorService;
 
 namespace WhisleBotConsole
@@ -27,6 +28,12 @@ namespace WhisleBotConsole
 
             //var context = ServiceProvider.GetService<IUsersContext>();
             //context.Database.Migrate();
+
+            using (var usersContext = ServiceProvider.GetService<IUsersContext>())
+            {
+                //var context = serviceScope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+                usersContext.Migrate();
+            }
         }
 
         private void ConfigureServices(IServiceCollection services, string settingsFileSuffix)
