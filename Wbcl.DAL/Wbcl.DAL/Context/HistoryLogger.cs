@@ -22,14 +22,6 @@ namespace Wbcl.DAL.Context
             return LogHistory(_db, user, time, toUser, text);
         }
 
-        //public bool LogHistory(IUsersContext db, long chatId, DateTime time, bool toUser, string text)
-        //{
-
-
-        //    return LogHistory(db, user, time, toUser, text);
-
-        //}
-
         /// <summary>
         /// Something wrong with saving changes - trying to save a new user as well 
         /// </summary>
