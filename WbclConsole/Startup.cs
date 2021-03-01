@@ -1,22 +1,13 @@
-﻿using BotServer.TelegramBot;
-using Cyriller;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using NLog.Extensions.Logging;
 using System;
 using System.Text;
-using Telegram.Bot;
-using VkNet;
-using VkNet.Abstractions;
-using WhisleBotConsole.BotContorller;
-using WhisleBotConsole.Config;
-using WhisleBotConsole.DB;
-using WhisleBotConsole.TelegramBot;
-using WhisleBotConsole.Vk;
-using WhisleBotConsole.Vk.Extensions;
-using WhisleBotConsole.Vk.Posts;
+using Wbcl.Clients.ClientsService;
+using Wbcl.Core.Models.Settings;
+using Wbcl.DAL;
+using Wbcl.Monitors.MonitorService;
 
 namespace WhisleBotConsole
 {
@@ -34,8 +25,8 @@ namespace WhisleBotConsole
 
             ServiceProvider = services.BuildServiceProvider();
 
-            var context = ServiceProvider.GetService<UsersContext>();
-            context.Database.Migrate();
+            //var context = ServiceProvider.GetService<IUsersContext>();
+            //context.Database.Migrate();
         }
 
         private void ConfigureServices(IServiceCollection services, string settingsFileSuffix)
@@ -43,44 +34,15 @@ namespace WhisleBotConsole
             Console.OutputEncoding = Encoding.UTF8;
 
             var settingsFile = string.IsNullOrEmpty(settingsFileSuffix) ? "appsettings.json" : $"appsettings.{settingsFileSuffix}.json";
+            var appSettings = ReadSettings(settingsFile);
+            services//.Configure<Settings>(settings => settings = appSettings);
+                .AddSingleton(sp => appSettings);
 
-            var config = new ConfigurationBuilder()
-               .SetBasePath(System.IO.Directory.GetCurrentDirectory())
-               .AddJsonFile(settingsFile, true, true)
-               .Build();
-
-            var tgSettings = config.GetSection("TelegramSettings").Get<TelegramSettings>(); // as TelegramSettings;//.Get<TelegramSettings>();
-            var vkSettings = config.GetSection("VkSettings").Get<VkSettings>();
-            var dbSettings = config.GetSection("DbSettings").Get<DbSettings>();
-
-            services.Configure<Settings>(settings =>
-            {
-                settings.Telegram = tgSettings;
-                settings.Vkontakte = vkSettings;
-                settings.DbSettings = dbSettings;
-            });
+            services.AddClientServices(appSettings);
+            services.AddMonitorServices(appSettings);
+            services.AddDatabaseConnector(appSettings.DbSettings.ConnectionString);
 
 
-            services.AddSingleton<ITelegramBotClient>(new TelegramBotClient(tgSettings.AccessT));   
-            services.AddSingleton<IBotController, BotController>();
-            services.AddSingleton<IVkGroupsCrawler, VkGroupsCrawler>();
-            services.AddSingleton<VkGroupsCrawler>();
-            services.AddSingleton<ITelegramService, TelegramBotService>();
-            services.AddSingleton<ITelegramMessageRouter, TelegramMessageRouter>();
-            services.AddSingleton<IPostKeywordSearcher, StupidKeywordSearcher>();
-            //services.AddSingleton<IPostKeywordSearcher, CaseInsensitiveKeywordSearcher>();
-            services.AddSingleton<IMessageSender, TelegramMessageSender>();
-            services.AddSingleton<IUserNotifier, UserNewMentionsNotifier>();
-            services.AddSingleton<IVkService, VkService>();
-            //services.AddSingleton<CyrNounCollection, CyrNounCollection>();
-
-            var vkApi = new VkApi();
-            vkApi.SimpleAuthorize(vkSettings);
-            services.AddSingleton<IVkApi>(vkApi);
-
-            services.AddDbContext<UsersContext>(options => 
-                options.UseNpgsql(dbSettings.ConnectionString),
-                ServiceLifetime.Transient);
             services.AddLogging(loggingBuilder =>
             {
                 // configure Logging with NLog
@@ -88,6 +50,27 @@ namespace WhisleBotConsole
                 loggingBuilder.SetMinimumLevel(LogLevel.Warning);
                 loggingBuilder.AddNLog();
             });
+        }
+
+        private Settings ReadSettings(string settingsFile)
+        {
+            var config = new ConfigurationBuilder()
+               .SetBasePath(System.IO.Directory.GetCurrentDirectory())
+               .AddJsonFile(settingsFile, true, true)
+               .Build();
+
+            var tgSettings = config.GetSection("TelegramSettings").Get<TelegramSettings>();
+            var vkSettings = config.GetSection("VkSettings").Get<VkSettings>();
+            var dbSettings = config.GetSection("DbSettings").Get<DbSettings>();
+            var webSettings = config.GetSection("WebSettings").Get<WebSettings>();
+
+            return new Settings
+            {
+                Telegram = tgSettings,
+                Vkontakte = vkSettings,
+                DbSettings = dbSettings,
+                WebSettings = webSettings
+            };
         }
 
         private void Configure()
