@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.Options;
-using System.Linq;
+﻿using System.Linq;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.ReplyMarkups;
 using Wbcl.Clients.TelegramClient.MessageHandlers;
