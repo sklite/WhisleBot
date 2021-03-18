@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Telegram.Bot.Types;
 using Wbcl.Clients.TelegramClient.MessageHandlers;
 using Wbcl.Clients.TgClient;
+using Wbcl.Clients.TgClient.MessageHandlers.SpecialCommands;
 using Wbcl.Core.Models.Notifications;
 using Wbcl.Core.Models.Services;
 using Wbcl.Core.Models.Settings;
@@ -44,7 +45,8 @@ namespace WhisleBotConsole.TelegramBot
                 new RemoveSettingsStep1(_db),
                 new GetAllUsers(_db, settings),
                 new SetUserStatus(_db, settings),
-                new DownloadDbFile(_db, settings)
+                new DownloadDbFile(_db, settings),
+                new HelpHandler(_db)
             };
         }
 

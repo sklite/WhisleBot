@@ -11,7 +11,7 @@
     <PackageReference Include="Microsoft.Extensions.Options" Version="5.0.0" />
     <PackageReference Include="Miyconst.Cyriller" Version="0.1.1" />
     <PackageReference Include="NLog" Version="4.7.7" />
-    <PackageReference Include="VkNet" Version="1.59.0" />
+    <PackageReference Include="VkNet" Version="1.61.0" />
   </ItemGroup>
 
   <ItemGroup>
