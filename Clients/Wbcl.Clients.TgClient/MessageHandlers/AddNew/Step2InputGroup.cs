@@ -10,7 +10,7 @@ using User = Wbcl.Core.Models.Database.User;
 
 namespace Wbcl.Clients.TgClient.MessageHandlers.AddNew
 {
-    class Step2InputGroup : BaseTgMessageHandler
+    public class Step2InputGroup : BaseTgMessageHandler
     {
         private readonly IVkUtils _vk;
         private Dictionary<PreferenceType, string> _resultText;
