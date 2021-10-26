@@ -41,7 +41,6 @@
     <ProjectReference Include="..\Clients\Wbcl.Clients.ClientsService\Wbcl.Clients.ClientsService.csproj" />
     <ProjectReference Include="..\DAL\Wbcl.DAL\Wbcl.DAL.csproj" />
     <ProjectReference Include="..\Monitors\Wbcl.Monitors.MonitorService\Wbcl.Monitors.MonitorService.csproj" />
-    <ProjectReference Include="..\Wbcl.DAL\Wbcl.DAL\Wbcl.DAL.csproj" />
   </ItemGroup>
   <ItemGroup>
     <None Update="nlog.config">
