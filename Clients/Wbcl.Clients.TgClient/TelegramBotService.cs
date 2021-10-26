@@ -1,11 +1,10 @@
-﻿using NLog;
-using System;
+﻿using System;
+using NLog;
 using Telegram.Bot;
 using Telegram.Bot.Args;
-using Wbcl.Clients.TgClient;
 using Wbcl.Core.Models.Services;
 
-namespace Wbcl.Clients.TelegramClient
+namespace Wbcl.Clients.TgClient
 {
     public class TelegramBotService : IClientService
     {

@@ -3,8 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Wbcl.Core.Models.Services;
-using Wbcl.Monitors.WebMonitor;
-using WhisleBotConsole.Vk;
+using Wbcl.Monitors.VkMonitor;
 
 namespace Wbcl.Monitors.MonitorService
 {
@@ -15,7 +14,6 @@ namespace Wbcl.Monitors.MonitorService
         public MonitorServiceContainer(IServiceProvider serviceProvider)
         {
             _monitors.Add(serviceProvider.GetService<VkService>());
-            _monitors.Add(serviceProvider.GetService<WebMonitorService>());
         }
 
         public void AddMonitors(ICollection<IMonitorService> monitors)

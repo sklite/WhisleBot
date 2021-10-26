@@ -1,23 +1,21 @@
-﻿using Microsoft.EntityFrameworkCore;
-using NLog;
-using System;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using NLog;
 using VkNet.Abstractions;
+using VkNet.Enums;
 using VkNet.Exception;
 using VkNet.Model.RequestParams;
-using Microsoft.Extensions.Options;
-using System.Collections.Generic;
-using VkNet.Enums;
-using Microsoft.Extensions.DependencyInjection;
-using Wbcl.DAL.Context;
-using Wbcl.Monitors.VkMonitor;
-using Wbcl.Core.Models.Settings;
 using Wbcl.Core.Models.Database;
+using Wbcl.Core.Models.Settings;
 using Wbcl.Core.Utils;
+using Wbcl.DAL.Context;
 using Wbcl.Monitors.VkMonitor.Posts;
 
-namespace WhisleBotConsole.Vk
+namespace Wbcl.Monitors.VkMonitor
 {
     public class VkGroupsCrawler : IVkGroupsCrawler
     {
@@ -55,38 +53,39 @@ namespace WhisleBotConsole.Vk
 
         public void DoSearch()
         {
-            using (var _usersContext = _serviceProvider.GetRequiredService<IUsersContext>())
+            using (var usersContext = _serviceProvider.GetRequiredService<IUsersContext>())
             {
-                var allPrefs = _usersContext.Preferences.Include(u => u.User);
+                var allPrefs = usersContext.Preferences.Include(u => u.User);
                 foreach (var prefs in allPrefs)
                 {
                     try
                     {
-                        if (ValidForSearch(prefs))
+                        if (!ValidForSearch(prefs)) 
+                            continue;
+
+                        var keywords = PrepareKeywords(prefs.Keyword);
+                        var wallGeParams = new WallGetParams
                         {
-                            var keywords = PrepareKeywords(prefs.Keyword);
-                            var wallGeParams = new WallGetParams
-                            {
-                                Count = 50,
-                                OwnerId = prefs.TargetType == PreferenceType.VkGroup ? -prefs.TargetId : prefs.TargetId
-                            };
-                            Thread.Sleep(1000);
-                            var getResult = _api.Wall.Get(wallGeParams);
-                            var posts = getResult.WallPosts;
+                            Count = 50,
+                            OwnerId = prefs.TargetType == PreferenceType.VkGroup ? -prefs.TargetId : prefs.TargetId
+                        };
 
-                            foreach (var post in posts.Reverse())
-                            {
-                                var searchResult = _keywordSearcher.LookIntoPost(post, keywords);
-                                if (!searchResult.Contains)
-                                    continue;
+                        Thread.Sleep(1000);
 
-                                if (post.Date <= prefs.LastNotifiedPostTime)
-                                    continue;
+                        var getResult = _api.Wall.Get(wallGeParams);
+                        var posts = getResult.WallPosts;
 
-                                prefs.LastNotifiedPostTime = post.Date ?? DateTime.Now;
-                                _userNotifier.NotifyUser(prefs, post.Id.Value, searchResult.Word);
-                            }
+                        foreach (var post in posts.Reverse())
+                        {
+                            var searchResult = _keywordSearcher.LookIntoPost(post, keywords);
+                            if (!searchResult.Contains)
+                                continue;
 
+                            if (post.Date <= prefs.LastNotifiedPostTime)
+                                continue;
+
+                            prefs.LastNotifiedPostTime = post.Date ?? DateTime.Now;
+                            _userNotifier.NotifyUser(prefs, post.Id.Value, searchResult.Word);
                         }
                     }
                     catch (UserAuthorizationFailException ex)
@@ -104,7 +103,7 @@ namespace WhisleBotConsole.Vk
                         _logger.Error(ex, $"Error while fetching VK groups. Pref: {prefs.ToShortString()}. Exception message: {ex}");
                     }
                 }
-                _usersContext.SaveChanges();
+                usersContext.SaveChanges();
             }
         }
 

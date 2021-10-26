@@ -1,22 +1,23 @@
-﻿using NLog;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using NLog;
 using Telegram.Bot.Types;
-using Wbcl.Clients.TelegramClient.MessageHandlers;
-using Wbcl.Clients.TgClient;
+using Wbcl.Clients.TgClient.MessageHandlers;
+using Wbcl.Clients.TgClient.MessageHandlers.AddNew;
+using Wbcl.Clients.TgClient.MessageHandlers.AdminCommands;
+using Wbcl.Clients.TgClient.MessageHandlers.EditExisting;
+using Wbcl.Clients.TgClient.MessageHandlers.Remove;
 using Wbcl.Clients.TgClient.MessageHandlers.SpecialCommands;
 using Wbcl.Core.Models.Notifications;
 using Wbcl.Core.Models.Services;
 using Wbcl.Core.Models.Settings;
 using Wbcl.Core.Utils;
 using Wbcl.DAL.Context;
-using WhisleBotConsole.TelegramBot.MessageHandlers;
-using WhisleBotConsole.TelegramBot.MessageHandlers.AdminCommands;
 using User = Wbcl.Core.Models.Database.User;
 
-namespace WhisleBotConsole.TelegramBot
+namespace Wbcl.Clients.TgClient
 {
     public class TelegramMessageRouter : ITelegramMessageRouter
     {

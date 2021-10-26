@@ -10,6 +10,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Core\Wbcl.Core.UtilsNew\Wbcl.Core.Utils.csproj" />
+    <ProjectReference Include="..\..\DAL\Wbcl.DAL\Wbcl.DAL.csproj" />
     <ProjectReference Include="..\..\Wbcl.DAL\Wbcl.DAL\Wbcl.DAL.csproj" />
   </ItemGroup>
 

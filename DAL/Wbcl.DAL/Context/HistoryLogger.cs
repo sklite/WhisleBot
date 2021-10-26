@@ -15,7 +15,7 @@ namespace Wbcl.DAL.Context
 
         public bool LogHistory(long chatId, DateTime time, bool toUser, string text)
         {
-            var user = _db.Users.Where(user => user.ChatId == chatId).FirstOrDefault();
+            var user = _db.Users.FirstOrDefault(u => u.ChatId == chatId);
             if (user == null)
                 return false;
 

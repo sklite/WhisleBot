@@ -2,14 +2,13 @@
 using System.Collections.Generic;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.ReplyMarkups;
-using Wbcl.Clients.TelegramClient.MessageHandlers;
-using Wbcl.Clients.TelegramClient.Models;
+using Wbcl.Clients.TgClient.Models;
 using Wbcl.Core.Models.Database;
 using Wbcl.Core.Utils;
 using Wbcl.DAL.Context;
 using User = Wbcl.Core.Models.Database.User;
 
-namespace WhisleBotConsole.TelegramBot.MessageHandlers
+namespace Wbcl.Clients.TgClient.MessageHandlers.AddNew
 {
     class Step2InputGroup : BaseTgMessageHandler
     {

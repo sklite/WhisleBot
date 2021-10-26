@@ -11,7 +11,6 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Core\Wbcl.Core.NewModels\Wbcl.Core.Models.csproj" />
     <ProjectReference Include="..\VkMonitor\Wbcl.Monitors.VkMonitor.csproj" />
-    <ProjectReference Include="..\Wbcl.Monitors.WebMonitor\Wbcl.Monitors.WebMonitor.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,4 +1,4 @@
-﻿namespace Wbcl.Clients.ClientService
+﻿namespace Wbcl.Clients.ClientsService
 {
     public interface IClientServiceContainer
     {

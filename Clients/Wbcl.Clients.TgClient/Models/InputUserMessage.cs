@@ -1,4 +1,4 @@
-﻿namespace Wbcl.Clients.TelegramClient.Models
+﻿namespace Wbcl.Clients.TgClient.Models
 {
     //public class InputUserMessage : ITelegramMessage
     //{

@@ -3,9 +3,9 @@ using System.Linq;
 using Telegram.Bot.Types.ReplyMarkups;
 using Wbcl.Core.Models.Database;
 
-namespace WhisleBotConsole.TelegramBot.MarkupUtils
+namespace Wbcl.Clients.TgClient.MarkupUtils
 {
-    static class MessageMarkupUtilities
+    public static class MessageMarkupUtilities
     {
         public static List<List<KeyboardButton>> GetReplyKeyboardForGroups(IEnumerable<UserPreference> groups)
         {

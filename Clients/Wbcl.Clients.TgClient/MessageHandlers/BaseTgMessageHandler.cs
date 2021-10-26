@@ -1,13 +1,13 @@
 ﻿using Telegram.Bot.Types;
-using Wbcl.Clients.TelegramClient.Models;
+using Wbcl.Clients.TgClient.MarkupUtils;
+using Wbcl.Clients.TgClient.Models;
 using Wbcl.Core.Models.Database;
 using Wbcl.DAL.Context;
-using WhisleBotConsole.TelegramBot.MarkupUtils;
 using User = Wbcl.Core.Models.Database.User;
 
-namespace Wbcl.Clients.TelegramClient.MessageHandlers
+namespace Wbcl.Clients.TgClient.MessageHandlers
 {
-    abstract class BaseTgMessageHandler
+    public abstract class BaseTgMessageHandler
     {
         protected readonly IUsersContext _db;
 

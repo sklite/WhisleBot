@@ -5,8 +5,6 @@ using Wbcl.Core.Models.Settings;
 using Wbcl.Core.Utils;
 using Wbcl.Monitors.VkMonitor;
 using Wbcl.Monitors.VkMonitor.Posts;
-using Wbcl.Monitors.WebMonitor;
-using WhisleBotConsole.Vk;
 
 namespace Wbcl.Monitors.MonitorService
 {
@@ -14,7 +12,6 @@ namespace Wbcl.Monitors.MonitorService
     {
         public static IServiceCollection AddMonitorServices(this IServiceCollection services, Settings settings)
         {
-
             services.AddSingleton<IVkGroupsCrawler, VkGroupsCrawler>();
             services.AddSingleton<IVkUtils, VkUtils>();
             services.AddSingleton<IPostKeywordSearcher, StupidKeywordSearcher>();
@@ -26,7 +23,6 @@ namespace Wbcl.Monitors.MonitorService
 
             services.AddSingleton<IMonitorServiceContainer, MonitorServiceContainer>();
             services.AddSingleton<VkService>();
-            services.AddSingleton<WebMonitorService>();
 
             return services;
         }

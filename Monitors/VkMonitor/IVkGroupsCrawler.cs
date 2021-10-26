@@ -1,4 +1,4 @@
-﻿namespace WhisleBotConsole.Vk
+﻿namespace Wbcl.Monitors.VkMonitor
 {
     public interface IVkGroupsCrawler
     {

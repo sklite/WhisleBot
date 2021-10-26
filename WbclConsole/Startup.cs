@@ -26,9 +26,6 @@ namespace WhisleBotConsole
 
             ServiceProvider = services.BuildServiceProvider();
 
-            //var context = ServiceProvider.GetService<IUsersContext>();
-            //context.Database.Migrate();
-
             using (var usersContext = ServiceProvider.GetService<IUsersContext>())
             {
                 //var context = serviceScope.ServiceProvider.GetRequiredService<ApplicationDbContext>();

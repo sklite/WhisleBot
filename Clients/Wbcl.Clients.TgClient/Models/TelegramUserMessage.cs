@@ -2,9 +2,9 @@
 using Telegram.Bot.Types.ReplyMarkups;
 using Wbcl.Core.Models.Notifications;
 
-namespace Wbcl.Clients.TelegramClient.Models
+namespace Wbcl.Clients.TgClient.Models
 {
-    class TelegramUserMessage : IMessage
+    public class TelegramUserMessage : IMessage
     {
         public long ChatId { get; set; }
         public string Text { get; set; }

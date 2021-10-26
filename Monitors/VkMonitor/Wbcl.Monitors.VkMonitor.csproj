@@ -11,12 +11,13 @@
     <PackageReference Include="Microsoft.Extensions.Options" Version="5.0.0" />
     <PackageReference Include="Miyconst.Cyriller" Version="0.1.1" />
     <PackageReference Include="NLog" Version="4.7.7" />
-    <PackageReference Include="VkNet" Version="1.61.0" />
+    <PackageReference Include="VkNet" Version="1.67.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\Core\Wbcl.Core.NewModels\Wbcl.Core.Models.csproj" />
     <ProjectReference Include="..\..\Core\Wbcl.Core.UtilsNew\Wbcl.Core.Utils.csproj" />
+    <ProjectReference Include="..\..\DAL\Wbcl.DAL\Wbcl.DAL.csproj" />
     <ProjectReference Include="..\..\Wbcl.DAL\Wbcl.DAL\Wbcl.DAL.csproj" />
   </ItemGroup>
 

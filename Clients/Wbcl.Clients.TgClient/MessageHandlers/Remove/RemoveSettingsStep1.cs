@@ -2,14 +2,13 @@
 using System.Linq;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.ReplyMarkups;
-using Wbcl.Clients.TelegramClient.MessageHandlers;
-using Wbcl.Clients.TelegramClient.Models;
+using Wbcl.Clients.TgClient.MarkupUtils;
+using Wbcl.Clients.TgClient.Models;
 using Wbcl.Core.Models.Database;
 using Wbcl.DAL.Context;
-using WhisleBotConsole.TelegramBot.MarkupUtils;
 using User = Wbcl.Core.Models.Database.User;
 
-namespace WhisleBotConsole.TelegramBot.MessageHandlers
+namespace Wbcl.Clients.TgClient.MessageHandlers.Remove
 {
     class RemoveSettingsStep1 : BaseTgMessageHandler
     {

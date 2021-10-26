@@ -1,11 +1,9 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Telegram.Bot;
-using Wbcl.Clients.ClientService;
-using Wbcl.Clients.TelegramClient;
 using Wbcl.Clients.TgClient;
+using Wbcl.Clients.TgClient.Messaging;
 using Wbcl.Core.Models.Services;
 using Wbcl.Core.Models.Settings;
-using WhisleBotConsole.TelegramBot;
 
 namespace Wbcl.Clients.ClientsService
 {

@@ -1,12 +1,10 @@
-﻿using Microsoft.Extensions.Options;
-using NLog;
-using System;
+﻿using System;
 using System.Timers;
-using VkNet;
+using NLog;
 using Wbcl.Core.Models.Services;
 using Wbcl.Core.Models.Settings;
 
-namespace WhisleBotConsole.Vk
+namespace Wbcl.Monitors.VkMonitor
 {
     public class VkService : IMonitorService
     {

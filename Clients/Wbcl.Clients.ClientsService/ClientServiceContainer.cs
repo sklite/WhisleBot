@@ -1,10 +1,10 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using Wbcl.Clients.TelegramClient;
+using Microsoft.Extensions.DependencyInjection;
+using Wbcl.Clients.TgClient;
 using Wbcl.Core.Models.Services;
 
-namespace Wbcl.Clients.ClientService
+namespace Wbcl.Clients.ClientsService
 {
     public class ClientServiceContainer : IClientServiceContainer
     {

@@ -1,14 +1,12 @@
-﻿using Microsoft.Extensions.Options;
-using System;
+﻿using System;
 using Telegram.Bot.Types;
-using Wbcl.Clients.TelegramClient.MessageHandlers;
-using Wbcl.Clients.TelegramClient.Models;
+using Wbcl.Clients.TgClient.MarkupUtils;
+using Wbcl.Clients.TgClient.Models;
 using Wbcl.Core.Models.Database;
 using Wbcl.Core.Models.Settings;
 using Wbcl.DAL.Context;
-using WhisleBotConsole.TelegramBot.MarkupUtils;
 
-namespace WhisleBotConsole.TelegramBot.MessageHandlers.AdminCommands
+namespace Wbcl.Clients.TgClient.MessageHandlers.AdminCommands
 {
     class DownloadDbFile : BaseTgMessageHandler
     {

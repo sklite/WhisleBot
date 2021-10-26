@@ -30,7 +30,7 @@
     <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="5.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="3.1.7" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="3.1.7" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="5.0.1" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="5.0.2" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="5.0.0" />
     <PackageReference Include="Miyconst.Cyriller" Version="0.1.1" />
     <PackageReference Include="NLog" Version="4.7.7" />
@@ -39,6 +39,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Clients\Wbcl.Clients.ClientsService\Wbcl.Clients.ClientsService.csproj" />
+    <ProjectReference Include="..\DAL\Wbcl.DAL\Wbcl.DAL.csproj" />
     <ProjectReference Include="..\Monitors\Wbcl.Monitors.MonitorService\Wbcl.Monitors.MonitorService.csproj" />
     <ProjectReference Include="..\Wbcl.DAL\Wbcl.DAL\Wbcl.DAL.csproj" />
   </ItemGroup>

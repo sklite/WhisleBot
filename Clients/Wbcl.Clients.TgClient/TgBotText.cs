@@ -1,4 +1,4 @@
-﻿namespace WhisleBotConsole.TelegramBot
+﻿namespace Wbcl.Clients.TgClient
 {
     static class TgBotText
     {

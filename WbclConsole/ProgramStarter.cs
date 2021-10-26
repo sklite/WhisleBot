@@ -3,7 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using NLog;
 using System;
 using System.Threading;
-using Wbcl.Clients.ClientService;
+using Wbcl.Clients.ClientsService;
 using Wbcl.Monitors.MonitorService;
 
 namespace WhisleBotConsole

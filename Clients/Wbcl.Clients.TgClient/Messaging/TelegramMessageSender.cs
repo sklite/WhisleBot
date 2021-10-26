@@ -1,13 +1,13 @@
-﻿using NLog;
-using System;
+﻿using System;
 using System.Threading.Tasks;
+using NLog;
 using Telegram.Bot;
-using Wbcl.Clients.TelegramClient.Models;
+using Wbcl.Clients.TgClient.Models;
 using Wbcl.Core.Models.Notifications;
 using Wbcl.Core.Models.Services;
 using Wbcl.DAL.Context;
 
-namespace Wbcl.Clients.TelegramClient
+namespace Wbcl.Clients.TgClient.Messaging
 {
     public class TelegramMessageSender : IMessageSender
     {

@@ -3,9 +3,8 @@ using Wbcl.Core.Models.Database;
 using Wbcl.Core.Models.Notifications;
 using Wbcl.Core.Models.Services;
 using Wbcl.DAL.Context;
-using Wbcl.Monitors.VkMonitor;
 
-namespace WhisleBotConsole.Vk
+namespace Wbcl.Monitors.VkMonitor
 {
     public class UserNewMentionsNotifier : IUserNotifier
     {
@@ -19,7 +18,6 @@ namespace WhisleBotConsole.Vk
             _messageSender = messageSender;
             _db = db;
         }
-
 
         public void NotifyUser(UserPreference preference, long postId, string keyword)
         {

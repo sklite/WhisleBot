@@ -8,7 +8,6 @@ namespace Wbcl.DAL.Context
     public interface IHistoryLogger
     {
         bool LogHistory(long chatId, DateTime time, bool toUser, string text);
-      //  bool LogHistory(IUsersContext db, long chatId, DateTime time, bool toUser, string text);
         bool LogHistory(IUsersContext db, User user, DateTime time, bool toUser, string text);
     }
 }
